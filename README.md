@@ -1,23 +1,91 @@
 # 2048 AI
 
-AI for the game [2048](https://github.com/gabrielecirulli/2048).
+## UPDATES TO CORE
+### To Come
 
-See it in action [here](http://ov3y.github.io/2048-AI/). (Hit the auto-run button to let the AI attempt to solve it by itself)
+I'm going to keep the original layout and stylesheet, and that's about it. I'll do the logic in a Node server, and use EventSource to push the events to the front end.
 
-The algorithm is iterative deepening depth first alpha-beta search. The evaluation function tries to keep the rows and columns monotonic (either all decreasing or increasing) while aligning same-valued tiles and minimizing the number of tiles on the grid. For more detail on how it works, [check out my answer on stackoverflow](http://stackoverflow.com/a/22389702/1056032).
+OR
 
-You can tweak the thinking time via global var `animationDelay`. Higher = more time/deeper search.
+I'll do the training in the Node server, and duplicate the game board logic for the front end, so I can watch the game play, passing the neural network VIA EventSource.
 
-~~I think there are still some bugs as it tends to make some weird moves and die during the endgame, but in my testing it almost always gets 1024 and usually gets very close to 2048, achieving scores of roughly 8-10k.~~
+## UPDATES TO AI
+### To Come
 
-The better heuristics now give it a success rate of about 90% in my testing (on a reasonably fast computer).
+I'm going to build out a Neural Network behind this. It will be untrained, and will completely self-train.
 
-### Suggested Improvements
+INPUTS:
 
-1.  Caching. It's not really taking advantage of the iterative deepening yet, as it doesn't remember the move orderings from previous iterations. Consequently, there aren't very many alpha-beta cutoffs. With caching, I think the tree could get pruned much more. This would also allow a higher branching factor for computer moves, which would help a lot because I think the few losses are due to unexpected random computer moves that had been pruned.
+	- One input for each spot on the board (16 in total) going from left to right, and top to bottom.
+		~ Allows the network to "see" the board
+		~ Normalized based on the maximum value on the board.
+		~ ( Spot Value / Maximum Value )
+		~ If spot is empty, normalize to 0
+		~ ALTERNATIVELY:
+		~ ( 1 + ( -1 / Spot Value ) )
+		~ This would give us an ever increasing value for the maximum value, but in some longer games of infinite play, could diminish to making all squares appear the same.
 
-2. Put the search in a webworker. Parallelizing minimax is really hard, but just running it like normal in another thread would let the animations run more smoothly.
+	- One input for the previously attempted move: 
+		~ (1/4) for up
+		~ (2/4) for down
+		~ (3/4) for left
+		~ (4/4) for right
+		~ 0 for no move
+	
+	- One input for success or failure of the previous move
+		~ 1 for Success
+		~ 0 for Failure
 
-3. ~~Evaluation tweaks. There are currently four heuristics. Change the weights between them, run a lot of test games and track statistics to find an optimal eval function.~~
+	- One input for current score, normalized like this: ( 1 + ( -1 / score ) )
+		~ Maintains an increased response as the score increases, which will help to entice the network to keep trying for more points.
 
-4. Comments and cleanup. It's pretty hacky right now but I've spent too much time already. There are probably lots of low-hanging fruit optimizations.
+If we use ConvNet:
+
+Q-Learner API
+
+It's very simple to use deeqlearn.Brain: Initialize your network:
+
+   var brain = new deepqlearn.Brain(num_inputs, num_actions);
+   
+And to train it proceed in loops as follows:
+
+   var action = brain.forward(array_with_num_inputs_numbers);
+   // action is a number in [0, num_actions) telling index of the action the agent chooses
+   // here, apply the action on environment and observe some reward. Finally, communicate it:
+   brain.backward(reward); // <-- learning magic happens here
+   
+That's it! Let the agent learn over time (it will take opt.learning_steps_total), and it will only get better and better at accumulating reward as it learns. Note that the agent will still take random actions with probability opt.epsilon_min even once it's fully trained. To completely disable this randomness, or change it, you can disable the learning and set epsilon_test_time to 0:
+
+   brain.epsilon_test_time = 0.0; // don't make any random choices, ever
+   brain.learning = false;
+   var action = brain.forward(array_with_num_inputs_numbers); // get optimal action from learned policy
+   
+
+For us that would mean:
+
+	var brain = new deepqlearn.Brain(19, 4);
+
+This sets up the network.
+
+Then we collect the inputs in an array, and run
+
+	var action = brain.forward(inputs);
+
+This gives us the action we want to perform. The action will be an index of an array of actions.
+
+Something like this:
+
+        var actionix = this.brain.forward(input_array);
+	var action = this.actions[actionix];
+
+So if we have
+
+	var actions = ['up','down','left','right'];
+
+The network will eventually figure out what actions it's talking about.
+
+Once we have the action, we'll run the action, and then *reinforce* the network.
+
+	brain.backward(reward);
+
+Where reward is a number normalized between 0.0 and 1.0. For our purposes this could be the move score normalized.
