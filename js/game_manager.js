@@ -111,8 +111,13 @@ GameManager.prototype.run = function() {
 		moved: ( ( this.previousMove ) ? this.previousMove.moved : false )
 	});
 	this.previousScore = this.score;
-  this.previousMove = this.move(best.move);
-	this.ai.reward( ( this.score - this.previousScore ) );
+	this.previousMove = this.move(best.move);
+	this.ai.reward({
+			score: this.score,
+			previous: this.previousScore,
+			won: this.won,
+			over: this.over
+		});
   var timeout = animationDelay;
   if (this.running && !this.over && !this.won) {
     var self = this;

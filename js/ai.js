@@ -54,9 +54,23 @@ AI.prototype.getBest = function(meta) {
 
 }
 
-AI.prototype.reward = function(reward) {
+AI.prototype.reward = function(meta) {
 	
-	this.brain.backward( ( reward > 0 ) ? ( 1 + ( -2.5 / reward ) ) : 0 );
+	if( meta.over && !meta.won ){
+		
+		reward = -1;
+
+	}else if( meta.over && meta.won ){
+
+		reward = 1;
+
+	}else{
+
+		reward = ( 1 + ( -2.5 / ( meta.score - meta.previousScore ) ) );
+
+	}
+
+	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
 }
