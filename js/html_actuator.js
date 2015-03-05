@@ -94,10 +94,16 @@ HTMLActuator.prototype.updateScore = function (score) {
   var difference = score - this.score;
   this.score = score;
 
-  this.scoreContainer.textContent = this.score;
+	this.maxScore = this.maxScore || score;
+
+	if( this.score > this.maxScore )
+		this.maxScore = this.score;
+
+  this.scoreContainer.textContent = this.score + ' - ' + this.maxScore;
 
   if (difference > 0) {
     var addition = document.createElement("div");
+
     addition.classList.add("score-addition");
     addition.textContent = "+" + difference;
 

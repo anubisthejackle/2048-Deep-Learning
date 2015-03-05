@@ -9,7 +9,9 @@ function GameManager(size, InputManager, Actuator) {
   this.inputManager.on("restart", this.restart.bind(this));
 
   this.inputManager.on('think', function() {
-    var best = this.ai.getBest();
+    var best = this.ai.getBest({
+		score: this.score
+	});
     this.actuator.showHint(best.move);
   }.bind(this));
 
@@ -31,8 +33,8 @@ function GameManager(size, InputManager, Actuator) {
 // Restart the game
 GameManager.prototype.restart = function () {
   this.actuator.restart();
-  this.running = false;
-  this.actuator.setRunButton('Auto-run');
+ // this.running = false;
+ // this.actuator.setRunButton('Auto-run');
   this.setup();
 };
 
@@ -41,7 +43,7 @@ GameManager.prototype.setup = function () {
   this.grid         = new Grid(this.size);
   this.grid.addStartTiles();
 
-  this.ai           = new AI(this.grid);
+  this.ai           = this.ai || new AI(this.grid);
 
   this.score        = 0;
   this.over         = false;
@@ -54,11 +56,30 @@ GameManager.prototype.setup = function () {
 
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
-  this.actuator.actuate(this.grid, {
-    score: this.score,
-    over:  this.over,
-    won:   this.won
-  });
+
+	this.actuator.actuate(this.grid, {
+		score: this.score,
+		over:  this.over,
+		won:   this.won
+	});
+
+	if(this.over){
+		this.logResults();
+	}
+
+};
+
+GameManager.prototype.logResults = function() {
+	var GM = this;
+	setTimeout( function() {
+
+		GM.actuator.restart();
+		GM.setup();
+		document.getElementsByClassName("ai-button")[1].click();
+		document.getElementsByClassName("ai-button")[1].click();
+
+	}, 2000 );
+
 };
 
 // makes a given move and updates state
@@ -85,8 +106,13 @@ GameManager.prototype.move = function(direction) {
 
 // moves continuously until game is over
 GameManager.prototype.run = function() {
-  var best = this.ai.getBest();
-  this.move(best.move);
+  var best = this.ai.getBest({
+		score: this.score,
+		moved: ( ( this.previousMove ) ? this.previousMove.moved : false )
+	});
+	this.previousScore = this.score;
+  this.previousMove = this.move(best.move);
+	this.ai.reward( ( this.score - this.previousScore ) );
   var timeout = animationDelay;
   if (this.running && !this.over && !this.won) {
     var self = this;
