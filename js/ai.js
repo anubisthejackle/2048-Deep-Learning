@@ -18,6 +18,22 @@ AI.prototype.getMaxVal = function() {
 	return max;
 }
 
+AI.prototype.getEmptyCount = function() {
+
+	var count = 0;
+	this.grid.cells.forEach(function(row) {
+		row.forEach( function( curVal ) {
+			if( curVal )
+				return;
+
+			count++;
+		});
+	});
+
+	return count;
+
+}
+
 AI.prototype.buildInputs = function(score, moved, timesMoved) {
 
 	var inputs = [];
@@ -66,8 +82,9 @@ AI.prototype.reward = function(meta) {
 
 		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
 		reward += ( 1 + ( (-1 * max) / meta.score ) );
-		reward += ( 1 + (-1 / meta.timesMoved ) );
-		reward /= 3;
+		reward += ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );
+		reward += ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
+		reward /= 4;
 
 	}else{
 

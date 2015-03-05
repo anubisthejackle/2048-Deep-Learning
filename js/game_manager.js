@@ -119,7 +119,8 @@ GameManager.prototype.run = function() {
 			previous: this.previousScore,
 			won: this.won,
 			over: this.over,
-			timesMoved: this.timesMoved
+			timesMoved: this.timesMoved,
+			empty: this.ai.getEmptyCount()
 		});
   var timeout = animationDelay;
   if (this.running && !this.over && !this.won) {
