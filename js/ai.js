@@ -18,7 +18,7 @@ AI.prototype.getMaxVal = function() {
 	return max;
 }
 
-AI.prototype.buildInputs = function(score, moved) {
+AI.prototype.buildInputs = function(score, moved, timesMoved) {
 
 	var inputs = [];
 
@@ -35,9 +35,10 @@ AI.prototype.buildInputs = function(score, moved) {
 		});
 	});
 
-	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4 : 0 );
-	inputs.push( ( score > 0 ) ? ( 1 + ( -1 / score ) ) : 0 );
-	inputs.push( ( moved ) ? 1 : 0 );
+	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
+	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
+	inputs.push( ( moved )                 ? 1                          : 0 );
+	inputs.push( ( timesMoved > 0 )        ? ( 1 + (-1 / timesMoved ) ) : 0 );
 
 	return inputs;
 
@@ -65,7 +66,8 @@ AI.prototype.reward = function(meta) {
 
 		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
 		reward += ( 1 + ( (-1 * max) / meta.score ) );
-		reward /= 2;
+		reward += ( 1 + (-1 / meta.timesMoved ) );
+		reward /= 3;
 
 	}else{
 

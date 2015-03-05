@@ -48,7 +48,7 @@ GameManager.prototype.setup = function () {
   this.score        = 0;
   this.over         = false;
   this.won          = false;
-
+  this.timesMoved   = 0;
   // Update the actuator
   this.actuate();
 };
@@ -108,15 +108,18 @@ GameManager.prototype.move = function(direction) {
 GameManager.prototype.run = function() {
   var best = this.ai.getBest({
 		score: this.score,
-		moved: ( ( this.previousMove ) ? this.previousMove.moved : false )
+		moved: ( ( this.previousMove ) ? this.previousMove.moved : false ),
+		timesMoved: this.timesMoved
 	});
 	this.previousScore = this.score;
 	this.previousMove = this.move(best.move);
+	this.timesMoved++;
 	this.ai.reward({
 			score: this.score,
 			previous: this.previousScore,
 			won: this.won,
-			over: this.over
+			over: this.over,
+			timesMoved: this.timesMoved
 		});
   var timeout = animationDelay;
   if (this.running && !this.over && !this.won) {
