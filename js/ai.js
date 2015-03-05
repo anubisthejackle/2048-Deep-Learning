@@ -55,8 +55,8 @@ AI.prototype.getBest = function(meta) {
 }
 
 AI.prototype.reward = function(reward) {
-	console.log( 'REWARD' );
-	console.log( ( reward > 0 ) ? ( 1 + ( -2.5 / reward ) ) : 0 );	
+	
 	this.brain.backward( ( reward > 0 ) ? ( 1 + ( -2.5 / reward ) ) : 0 );
+	this.brain.visSelf(document.getElementById('brainInfo'));
 
 }
