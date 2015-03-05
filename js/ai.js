@@ -67,7 +67,9 @@ AI.prototype.reward = function(meta) {
 
 	}else if( meta.score != meta.previous ) {
 
-		reward = ( 1 + ( (-1 * max) / ( meta.score - meta.previous ) ) );
+		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
+		reward += ( 1 + ( (-1 * max) / meta.score ) );
+		reward /= 2;
 
 	}else{
 
@@ -75,7 +77,6 @@ AI.prototype.reward = function(meta) {
 
 	}
 
-	console.log(reward);
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
