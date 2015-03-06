@@ -81,7 +81,7 @@ GameManager.prototype.logResults = function() {
 			document.getElementsByClassName("ai-button")[1].click();
 
 		}, 2000 );
-\	}
+	}
 
 };
 
