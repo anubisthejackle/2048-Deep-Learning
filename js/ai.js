@@ -63,9 +63,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved) {
 }
 
 AI.prototype.getBest = function(meta) {
-	return {
-		move: this.moves[Math.floor(Math.random()*this.moves.length)]
-	};
+
 	var inputs = this.buildInputs( meta.score, meta.moved );
 	var action = this.brain.forward( inputs );
 
