@@ -71,14 +71,17 @@ GameManager.prototype.actuate = function () {
 
 GameManager.prototype.logResults = function() {
 	var GM = this;
-	setTimeout( function() {
+	
+	if( !this.win ){
+		setTimeout( function() {
 
-		GM.actuator.restart();
-		GM.setup();
-		document.getElementsByClassName("ai-button")[1].click();
-		document.getElementsByClassName("ai-button")[1].click();
+			GM.actuator.restart();
+			GM.setup();
+			document.getElementsByClassName("ai-button")[1].click();
+			document.getElementsByClassName("ai-button")[1].click();
 
-	}, 2000 );
+		}, 2000 );
+\	}
 
 };
 
