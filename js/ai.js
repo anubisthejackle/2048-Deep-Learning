@@ -80,14 +80,10 @@ AI.prototype.reward = function(meta) {
 
 	}else if( meta.score != meta.previous ) {
 
-		reward  = 1 / ( meta.score - meta.previous );
-		/*( 1 + (-1 / ( meta.score - meta.previous ) ) );*/
-		reward += (1 * max) / meta.score;
-		/*( 1 + ( (-1 * max) / meta.score ) );*/
-		reward += ( ( meta.timesMoved > 0 ) ? 1 / meta.timesMoved : 0 );
-		/*( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );*/
-		reward += ( ( meta.empty > 0 ) ? 1 / meta.empty : 0 );
-		/*( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );*/
+		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
+		reward += ( 1 + ( (-1 * max) / meta.score ) );
+		reward += ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );
+		reward += ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
 		reward /= 4;
 
 	}else{
