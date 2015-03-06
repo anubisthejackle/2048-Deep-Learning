@@ -117,7 +117,7 @@ GameManager.prototype.run = function() {
 	this.previousScore = this.score;
 	this.previousMove = this.move(best.move);
 	this.timesMoved++;
-	this.ai.rewardMultiple({
+	this.ai.reward({
 			score: this.score,
 			previous: this.previousScore,
 			won: this.won,
