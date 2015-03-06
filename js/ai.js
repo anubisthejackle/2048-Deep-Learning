@@ -44,7 +44,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved) {
 		row.forEach( function( curVal ) {
 			
 			if( curVal ){
-				inputs.push( parseFloat( parseFloat( curVal.value ) / max ) );
+				inputs.push( ( 1 + ( -1 / curVal.value ) ) );
 			}else{
 				inputs.push(0);
 			}
