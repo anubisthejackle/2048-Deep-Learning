@@ -99,3 +99,19 @@ AI.prototype.reward = function(meta) {
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
 }
+
+AI.prototype.rewardMultiple = function(meta){
+
+	var max = this.getMaxVal();
+	var scoreReward = ( 1 + (-1 / (meta.score - meta.previous ) ) );
+	var maxReward = ( 1 + ( ( -1 * max ) / meta.score ) );
+	var movesReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0);
+	var emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
+
+	this.brain.backward( scoreReward );
+	this.brain.backward( maxReward );
+	this.brain.backward( movesReward );
+	this.brain.backward( emptyReward );
+	this.brain.visSelf(document.getElementById('brainInfo'));
+
+}
