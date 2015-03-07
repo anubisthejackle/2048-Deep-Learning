@@ -4,8 +4,8 @@ function AI() {
 	this.brain = new deepqlearn.Brain(19,4, {
 		epsilon_test_time: 0.0 // Shut off random guess
 	});
-	
-
+	this.previousMove = 0;	
+	this.previousMoved = false;
 }
 
 AI.prototype.getMaxVal = function() {
@@ -52,9 +52,9 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 		});
 	});
 
-	inputs.push( ( pMove > 0 ) ? pMove / 4      : 0 );
+	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
 	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
-	inputs.push( ( moved )                 ? 1                          : 0 );
+	inputs.push( ( this.previousMoved )                 ? 1                          : 0 );
 	inputs.push( ( timesMoved > 0 )        ? ( 1 + (-1 / timesMoved ) ) : 0 );
 
 	console.log('Inputs: ', inputs);
@@ -68,10 +68,18 @@ AI.prototype.getBest = function(meta) {
 	var inputs = this.buildInputs( meta.score, meta.moved, meta.timesMoved, meta.previousMove );
 	var action = this.brain.forward( inputs );
 	
-	return {
+	var move = {
 		move: this.moves[action]
 	};
 
+	this.previousMove = move.move;
+	
+	return move;
+
+}
+
+AI.prototype.setMoved = function(moved){
+	this.previousMoved = moved;
 }
 
 AI.prototype.reward = function(meta) {
