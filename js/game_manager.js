@@ -88,8 +88,11 @@ GameManager.prototype.logResults = function() {
 GameManager.prototype.move = function(direction) {
   var result = this.grid.move(direction);
   this.score += result.score;
-	console.log('Result:',result);
-	this.previousMove.moved = result.moved;
+	if( this.previousMove )
+		this.previousMove.moved = result.moved;
+	else
+		this.previousMove = { moved: result.moved, move: 0 };
+
   if (!result.won) {
     if (result.moved) {
       this.grid.computerMove();
