@@ -117,7 +117,8 @@ GameManager.prototype.run = function() {
 		timesMoved: this.timesMoved
 	});
 	this.previousScore = this.score;
-	this.previousMove.value = this.move(best.move);
+	this.previousMove = best;
+	this.move(best.move);
 	this.timesMoved++;
 	this.ai.reward({
 			score: this.score,
