@@ -4,6 +4,7 @@ function GameManager(size, InputManager, Actuator) {
   this.actuator     = new Actuator;
   this.running      = false;
 	this.history = [];
+	this.previousMove = { moved: false, move: 0 };
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
 
