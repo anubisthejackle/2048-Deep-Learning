@@ -1,4 +1,4 @@
-var previousMove = {moved: false, move: 0};
+window.previousMove = {moved: false, move: 0};
 function GameManager(size, InputManager, Actuator) {
   this.size         = size; // Size of the grid
   this.inputManager = new InputManager;
@@ -90,12 +90,12 @@ GameManager.prototype.logResults = function() {
 GameManager.prototype.move = function(direction) {
   var result = this.grid.move(direction);
   this.score += result.score;
-	if( previousMove ){
-		console.log('previousMove.moved');
-		previousMove.moved = result.moved;
+	if( window.previousMove ){
+		console.log('window.previousMove.moved');
+		window.previousMove.moved = result.moved;
 	}else{
-		console.log('overwrite previousMove');
-		previousMove = { moved: ((result.moved) ? true : false), move: 0 };
+		console.log('overwrite window.previousMove');
+		window.previousMove = { moved: ((result.moved) ? true : false), move: 0 };
 	}
   if (!result.won) {
     if (result.moved) {
@@ -118,18 +118,18 @@ GameManager.prototype.move = function(direction) {
 
 // moves continuously until game is over
 GameManager.prototype.run = function() {
-	console.log('Previous Move at Start of Run: ', previousMove);
+	console.log('Previous Move at Start of Run: ', window.previousMove);
 	var best = this.ai.getBest({
 		score: this.score,
-		moved: ( ( previousMove ) ? previousMove.moved : false ),
-		previousMove: ( ( previousMove ) ? previousMove.move : 0 ),
+		moved: ( ( window.previousMove ) ? window.previousMove.moved : false ),
+		window.previousMove: ( ( window.previousMove ) ? window.previousMove.move : 0 ),
 		timesMoved: this.timesMoved,
 		grid: this.grid
 	});
 	this.previousScore = this.score;
 	this.move(best.move);
-	console.log('Previous Move After Move: ', previousMove);
-	previousMove = best;
+	console.log('Previous Move After Move: ', window.previousMove);
+	window.previousMove = best;
 	this.timesMoved++;
 	this.ai.reward({
 			score: this.score,
