@@ -9,7 +9,8 @@ function GameManager(size, InputManager, Actuator) {
 
   this.inputManager.on('think', function() {
     var best = this.ai.getBest({
-		score: this.score
+		score: this.score,
+		grid: this.grid
 	});
     this.actuator.showHint(best.move);
   }.bind(this));
@@ -42,7 +43,7 @@ GameManager.prototype.setup = function () {
   this.grid         = new Grid(this.size);
   this.grid.addStartTiles();
 
-  this.ai           = this.ai || new AI(this.grid);
+  this.ai           = this.ai || new AI();
 
   this.score        = 0;
   this.over         = false;
@@ -118,7 +119,8 @@ GameManager.prototype.run = function() {
 		score: this.score,
 		moved: ( ( this.previousMove ) ? this.previousMove.moved : false ),
 		previousMove: ( ( this.previousMove ) ? this.previousMove.move : 0 ),
-		timesMoved: this.timesMoved
+		timesMoved: this.timesMoved,
+		grid: this.grid
 	});
 	this.previousScore = this.score;
 	this.move(best.move);

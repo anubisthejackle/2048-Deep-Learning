@@ -1,6 +1,5 @@
-function AI(grid) {
+function AI() {
 
-	this.grid = grid;
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(19,4, {
 		epsilon_test_time: 0.0 // Shut off random guess
@@ -65,9 +64,10 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, previousMove) {
 
 AI.prototype.getBest = function(meta) {
 
+	this.grid = meta.grid;
 	var inputs = this.buildInputs( meta.score, meta.moved, meta.timesMoved, meta.previousMove );
 	var action = this.brain.forward( inputs );
-
+	
 	return {
 		move: this.moves[action]
 	};
