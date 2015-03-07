@@ -84,10 +84,14 @@ AI.prototype.reward = function(meta) {
 	}else if( meta.score != meta.previous ) {
 
 		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
-		reward += ( 1 + ( (-1 * max) / meta.score ) );
-		reward += ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );
-		reward += ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
-		reward /= 4;
+		console.log('Score Reward: ', reward);
+		maxReward = ( 1 + ( (-1 * max) / meta.score ) );
+		console.log('Max Reward: ', maxReward);
+		moveReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );
+		console.log('Move Reward: ', moveReward);
+		emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
+		console.log('Empty Reward: ', emptyReward);
+		reward = ( reward + maxReward + moveReward + emptyReward ) / 4;
 
 	}else{
 
@@ -98,6 +102,7 @@ AI.prototype.reward = function(meta) {
 	if( meta.over && !meta.won )
 		reward *= -1;
 
+	console.log('Reward: ', reward );
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
