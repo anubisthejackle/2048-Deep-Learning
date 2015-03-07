@@ -83,7 +83,7 @@ AI.prototype.reward = function(meta) {
 
 	}else if( meta.score != meta.previous ) {
 
-		reward  = ( 1 + (-0.1 / ( meta.score - meta.previous ) ) );
+		reward  = ( 1 + ( -1 / ( meta.score - meta.previous ) ) ) / 2;
 		console.log('Score Reward: ', reward);
 		maxReward = ( 1 + ( (-0.1 * max) / meta.score ) );
 		console.log('Max Reward: ', maxReward);
