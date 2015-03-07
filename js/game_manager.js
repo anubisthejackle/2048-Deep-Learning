@@ -106,7 +106,7 @@ GameManager.prototype.move = function(direction) {
 
   if (!this.grid.movesAvailable()) {
 	this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
-	jQuery('#scoreHistory').append('<pre>' + JSON.stringify(this.history) + '</pre>');
+	jQuery('#scoreHistory').html('<pre>' + JSON.stringify(this.history) + '</pre>');
     this.over = true; // Game over!
   }
 
