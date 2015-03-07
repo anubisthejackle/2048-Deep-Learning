@@ -90,11 +90,13 @@ GameManager.prototype.logResults = function() {
 GameManager.prototype.move = function(direction) {
   var result = this.grid.move(direction);
   this.score += result.score;
-	if( previousMove )
+	if( previousMove ){
+		console.log('previousMove.moved');
 		previousMove.moved = result.moved;
-	else
+	}else{
+		console.log('overwrite previousMove');
 		previousMove = { moved: ((result.moved) ? true : false), move: 0 };
-
+	}
   if (!result.won) {
     if (result.moved) {
       this.grid.computerMove();
