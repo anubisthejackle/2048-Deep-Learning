@@ -36,7 +36,7 @@ AI.prototype.getEmptyCount = function() {
 
 }
 
-AI.prototype.buildInputs = function(score, moved, timesMoved) {
+AI.prototype.buildInputs = function(score, moved, timesMoved, previousMove) {
 
 	var inputs = [];
 
@@ -53,7 +53,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved) {
 		});
 	});
 
-	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
+	inputs.push( ( previousMove > 0 ) ? previousMove / 4      : 0 );
 	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
 	inputs.push( ( moved )                 ? 1                          : 0 );
 	inputs.push( ( timesMoved > 0 )        ? ( 1 + (-1 / timesMoved ) ) : 0 );
@@ -64,7 +64,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved) {
 
 AI.prototype.getBest = function(meta) {
 
-	var inputs = this.buildInputs( meta.score, meta.moved );
+	var inputs = this.buildInputs( meta.score, meta.moved, meta.timesMoved, meta.previousMove );
 	var action = this.brain.forward( inputs );
 
 	return {

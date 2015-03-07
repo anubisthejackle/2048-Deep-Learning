@@ -113,6 +113,7 @@ GameManager.prototype.run = function() {
 	var best = this.ai.getBest({
 		score: this.score,
 		moved: ( ( this.previousMove ) ? this.previousMove.moved : false ),
+		previousMove: ( ( this.previousMove ) ? this.previousMove.move : 0 ),
 		timesMoved: this.timesMoved
 	});
 	this.previousScore = this.score;
