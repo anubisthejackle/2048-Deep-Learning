@@ -92,7 +92,7 @@ GameManager.prototype.move = function(direction) {
 	if( this.previousMove )
 		this.previousMove.moved = result.moved;
 	else
-		this.previousMove = { moved: result.moved, move: 0 };
+		this.previousMove = { moved: ((result.moved) ? true : false), move: 0 };
 
   if (!result.won) {
     if (result.moved) {
