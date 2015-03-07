@@ -3,7 +3,7 @@ function GameManager(size, InputManager, Actuator) {
   this.inputManager = new InputManager;
   this.actuator     = new Actuator;
   this.running      = false;
-
+	this.history = [];
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
 
@@ -105,7 +105,8 @@ GameManager.prototype.move = function(direction) {
   //console.log(this.grid.valueSum());
 
   if (!this.grid.movesAvailable()) {
-	jQuery('#scoreHistory').append('<div> Ending Score: ' + this.score + ' - Total Moves: ' + (this.timesMoved+1) + '</div>');
+	this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
+	jQuery('#scoreHistory').append('<pre>'.JSON.stringify(this.history).'</pre>');
     this.over = true; // Game over!
   }
 
