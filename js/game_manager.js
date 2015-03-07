@@ -104,6 +104,7 @@ GameManager.prototype.move = function(direction) {
   //console.log(this.grid.valueSum());
 
   if (!this.grid.movesAvailable()) {
+	jQuery('#scoreHistory').append('<div> Ending Score: ' + this.score + ' - Total Moves: ' + (this.timesMoved+1) + '</div>');
     this.over = true; // Game over!
   }
 
