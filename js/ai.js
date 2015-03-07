@@ -58,6 +58,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, previousMove) {
 	inputs.push( ( moved )                 ? 1                          : 0 );
 	inputs.push( ( timesMoved > 0 )        ? ( 1 + (-1 / timesMoved ) ) : 0 );
 
+	console.log('Inputs: ', inputs);
 	return inputs;
 
 }
