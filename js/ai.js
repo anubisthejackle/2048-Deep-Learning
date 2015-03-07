@@ -87,7 +87,7 @@ AI.prototype.reward = function(meta) {
 		console.log('Score Reward: ', reward);
 		maxReward = ( 1 + ( (-0.1 * max) / meta.score ) );
 		console.log('Max Reward: ', maxReward);
-		moveReward = ( ( meta.timesMoved > 0 ) ? ( 1 + ( (-1 / meta.timesMoved ) / 5 ) ) : 0 );
+		moveReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) / 5  : 0 );
 		console.log('Move Reward: ', moveReward);
 		emptyReward = ( ( meta.empty > 0 ) ? 1 +  ( -1 / meta.empty ) : 0 );
 		console.log('Empty Count: ', meta.empty );
