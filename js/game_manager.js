@@ -2,7 +2,7 @@ function GameManager(size, InputManager, Actuator) {
   this.size         = size; // Size of the grid
   this.inputManager = new InputManager;
   this.actuator     = new Actuator;
-
+  this.previousMove = {};
   this.running      = false;
 
   this.inputManager.on("move", this.move.bind(this));
@@ -91,6 +91,7 @@ GameManager.prototype.move = function(direction) {
   this.score += result.score;
 
   if (!result.won) {
+	this.previousMove.moved = result.move;
     if (result.moved) {
       this.grid.computerMove();
     }
@@ -116,7 +117,7 @@ GameManager.prototype.run = function() {
 		timesMoved: this.timesMoved
 	});
 	this.previousScore = this.score;
-	this.previousMove = this.move(best.move);
+	this.previousMove.value = this.move(best.move);
 	this.timesMoved++;
 	this.ai.reward({
 			score: this.score,
