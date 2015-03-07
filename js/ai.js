@@ -85,11 +85,11 @@ AI.prototype.reward = function(meta) {
 
 		reward  = ( 1 + (-0.1 / ( meta.score - meta.previous ) ) );
 		console.log('Score Reward: ', reward);
-		maxReward = ( 1 + ( (-1 * max) / meta.score ) );
+		maxReward = ( 1 + ( (-0.1 * max) / meta.score ) );
 		console.log('Max Reward: ', maxReward);
-		moveReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );
+		moveReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-0.1 / meta.timesMoved ) ) : 0 );
 		console.log('Move Reward: ', moveReward);
-		emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
+		emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-0.1 / meta.empty ) ) : 0 );
 		console.log('Empty Reward: ', emptyReward);
 		reward = ( reward + maxReward + moveReward + emptyReward ) / 4;
 
