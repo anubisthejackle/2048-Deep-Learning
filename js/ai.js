@@ -26,7 +26,8 @@ AI.prototype.getEmptyCount = function() {
 		row.forEach( function( curVal ) {
 			if( curVal )
 				return;
-
+			
+			console.log('Empty: ', curVal);
 			count++;
 		});
 	});
