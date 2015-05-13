@@ -1,3 +1,7 @@
+var StateManager = {
+	previousMove: false
+};
+
 function GameManager(size, InputManager, Actuator) {
   this.size         = size; // Size of the grid
   this.inputManager = new InputManager;
@@ -105,18 +109,19 @@ GameManager.prototype.move = function(direction) {
   }
 
   this.actuate();
+
+	return result;
 }
 
 // moves continuously until game is over
 GameManager.prototype.run = function() {
-	console.log(this.previousMove);
 	var best = this.ai.getBest({
 		score: this.score,
-		moved: ( ( this.previousMove ) ? this.previousMove.moved : false ),
+		moved: ( ( StateManager.previousMove ) ? StateManager.previousMove.moved : false ),
 		timesMoved: this.timesMoved
 	});
 	this.previousScore = this.score;
-	this.previousMove = this.move(best.move);
+	StateManager.previousMove = this.move(best.move);
 	this.timesMoved++;
 	this.ai.reward({
 			score: this.score,
