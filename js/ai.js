@@ -63,6 +63,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved) {
 	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
 	inputs.push( ( moved )                 ? 1                          : 0 );
 	inputs.push( ( timesMoved > 0 )        ? ( 1 + (-1 / timesMoved ) ) : 0 );
+	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );
 
 	return inputs;
 
@@ -91,7 +92,7 @@ AI.prototype.reward = function(meta) {
 		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
 		reward += ( 1 + ( (-1 * max) / meta.score ) );
 		reward += ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );
-		reward += ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
+		reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
 		reward /= 4;
 
 	}else{

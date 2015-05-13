@@ -1,7 +1,25 @@
 var StateManager = {
 	previousMove: false,
-	maxVal: 0
+	maxVal: 0,
+	scores: [],
+	lowestScore: false,
+	medianScore: false,
+	meanScore: false,
+	highestScore: false
 };
+
+function median(values) {
+
+    values.sort( function(a,b) {return a - b;} );
+
+    var half = Math.floor(values.length/2);
+
+    if(values.length % 2)
+        return values[half];
+    else
+        return (values[half-1] + values[half]) / 2.0;
+
+}
 
 function GameManager(size, InputManager, Actuator) {
   this.size         = size; // Size of the grid
@@ -76,6 +94,45 @@ GameManager.prototype.actuate = function () {
 
 GameManager.prototype.logResults = function() {
 	var GM = this;
+/*var StateManager = {
+	previousMove: false,
+	maxVal: 0,
+	scores: [],
+	lowestScore: false,
+	medianScore: false,
+	meanScore: false,
+	highestScore: false
+};*/
+
+	StateManager.scores.push( this.score );
+
+	if( StateManager.lowestScore === false || StateManager.lowestScore > this.score )
+		StateManager.lowestScore = this.score;
+
+	if( StateManager.highestScore === false || StateManager.highestScore < this.score )
+		StateManager.highestScore = this.score;
+
+	if( StateManager.scores.length == 1 ){
+		StateManager.medianScore = this.score;
+		StateManager.meanScore = this.score;
+	}else{
+	
+		var sum = 0;
+		var median = median(StateManager.scores);
+		for( score in StateManager.scores ){
+
+			sum += score;
+
+		}
+
+		StateManager.meanScore = sum / StateManager.scores.length;
+
+	}
+	
+	document.getElementById('highest-score').innerHTML='Highest Score: ' + StateManager.highestScore;
+	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + StateManager.lowestScore;
+	document.getElementById('median-score').innerHTML='Median Score: ' + StateManager.medianScore;
+	document.getElementById('average-score').innerHTML='Mean Score: ' + StateManager.meanScore;
 	
 	if( !this.win ){
 		setTimeout( function() {
