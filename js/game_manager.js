@@ -8,7 +8,7 @@ var StateManager = {
 	highestScore: false
 };
 
-function median(values) {
+function getMedian(values) {
 
     values.sort( function(a,b) {return a - b;} );
 
@@ -118,13 +118,13 @@ GameManager.prototype.logResults = function() {
 	}else{
 	
 		var sum = 0;
-		var median = median(StateManager.scores);
+		StateManager.medianScore = getMedian(StateManager.scores);
 		for( score in StateManager.scores ){
 
-			sum += score;
+			sum += StateManager.scores[ score ];
 
 		}
-
+		console.log( sum );
 		StateManager.meanScore = sum / StateManager.scores.length;
 
 	}
