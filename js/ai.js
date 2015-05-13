@@ -2,7 +2,8 @@ function AI(grid) {
 
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(19,4, {
-		epsilon_test_time: 0.0 // Shut off random guess
+		epsilon_test_time: 0.0, // Shut off random guess
+		experience_size: 300000
 	});
 	this.previousMove = 0;
 
