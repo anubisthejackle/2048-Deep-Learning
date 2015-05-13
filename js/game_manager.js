@@ -116,7 +116,7 @@ GameManager.prototype.move = function(direction) {
 
 // moves continuously until game is over
 GameManager.prototype.run = function() {
-	var best = this.ai.getBest({
+	var best = this.ai.getBest(this.grid, {
 		score: this.score,
 		moved: ( ( StateManager.previousMove ) ? StateManager.previousMove.moved : false ),
 		timesMoved: this.timesMoved
