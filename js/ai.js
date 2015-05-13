@@ -17,6 +17,12 @@ AI.prototype.getMaxVal = function() {
 				max = curVal.value;
 		});
 	});
+
+	if( StateManager.maxVal < max ){
+		StateManager.maxVal = max;
+		document.getElementById('max-value').innerHTML('Max Value is: ' + max );
+	}
+
 	return max;
 }
 

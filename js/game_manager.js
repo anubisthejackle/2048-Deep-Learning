@@ -1,5 +1,6 @@
 var StateManager = {
-	previousMove: false
+	previousMove: false,
+	maxVal: 0
 };
 
 function GameManager(size, InputManager, Actuator) {
