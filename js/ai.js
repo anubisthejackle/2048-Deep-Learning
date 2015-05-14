@@ -2,7 +2,8 @@ function AI(grid) {
 
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(19,4, {
-		epsilon_test_time: 0.0, // Shut off random guess
+		epsilon_test_time: 0.1,
+		epsilon_min: 0.1,
 		experience_size: 300000
 	});
 	this.previousMove = 0;
@@ -62,7 +63,6 @@ AI.prototype.buildInputs = function(score, moved, timesMoved) {
 	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
 	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
 	inputs.push( ( moved )                 ? 1                          : 0 );
-	inputs.push( ( timesMoved > 0 )        ? ( 1 + (-1 / timesMoved ) ) : 0 );
 	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );
 
 	return inputs;
@@ -90,7 +90,6 @@ AI.prototype.reward = function(meta) {
 	}else if( meta.score != meta.previous ) {
 
 		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
-		reward += ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0 );
 		reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
 		reward /= 4;
 
