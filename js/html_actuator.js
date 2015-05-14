@@ -1,8 +1,8 @@
 function HTMLActuator() {
   this.tileContainer    = document.getElementsByClassName("tile-container")[0];
   this.scoreContainer   = document.getElementsByClassName("score-container")[0];
-  this.messageContainer = document.getElementsByClassName("game-message")[0];
-  this.sharingContainer = document.getElementsByClassName("score-sharing")[0];
+  //this.messageContainer = document.getElementsByClassName("game-message")[0];
+  //this.sharingContainer = document.getElementsByClassName("score-sharing")[0];
 
   this.score = 0;
 }
@@ -23,8 +23,8 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
 
     self.updateScore(metadata.score);
 
-    if (metadata.over) self.message(false); // You lose
-    if (metadata.won) self.message(true); // You win!
+    //if (metadata.over) self.message(false); // You lose
+    //if (metadata.won) self.message(true); // You win!
   });
 };
 
@@ -112,25 +112,25 @@ HTMLActuator.prototype.updateScore = function (score) {
 };
 
 HTMLActuator.prototype.message = function (won) {
-  var type    = won ? "game-won" : "game-over";
-  var message = won ? "You win!" : "Game over!"
+  //var type    = won ? "game-won" : "game-over";
+  //var message = won ? "You win!" : "Game over!"
 
   // if (ga) ga("send", "event", "game", "end", type, this.score);
 
-  this.messageContainer.classList.add(type);
-  this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+  //this.messageContainer.classList.add(type);
+  //this.messageContainer.getElementsByTagName("p")[0].textContent = message;
 
-  this.clearContainer(this.sharingContainer);
-  this.sharingContainer.appendChild(this.scoreTweetButton());
-  twttr.widgets.load();
+  //this.clearContainer(this.sharingContainer);
+  //this.sharingContainer.appendChild(this.scoreTweetButton());
+  //twttr.widgets.load();
 };
 
 HTMLActuator.prototype.clearMessage = function () {
-  this.messageContainer.classList.remove("game-won", "game-over");
+  //this.messageContainer.classList.remove("game-won", "game-over");
 };
 
 HTMLActuator.prototype.scoreTweetButton = function () {
-  var tweet = document.createElement("a");
+  /*var tweet = document.createElement("a");
   tweet.classList.add("twitter-share-button");
   tweet.setAttribute("href", "https://twitter.com/share");
   tweet.setAttribute("data-via", "gabrielecirulli");
@@ -140,7 +140,7 @@ HTMLActuator.prototype.scoreTweetButton = function () {
              "join numbers to score high! #2048game #2048ai";
   tweet.setAttribute("data-text", text);
 
-  return tweet;
+  return tweet;*/
 };
 
 
