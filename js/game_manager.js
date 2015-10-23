@@ -134,8 +134,8 @@ GameManager.prototype.logResults = function() {
 	document.getElementById('average-score').innerHTML='Mean Score: ' + StateManager.meanScore;
 
 	// the entire object is now simply string. You can save this somewhere
-	var str = JSONfn.stringify(this.ai.brain);
-	document.getElementById('savestate').value=str;
+	//var str = JSONfn.stringify(this.ai.brain);
+	//document.getElementById('savestate').value=str;
 	
 	if( !this.win ){
 		setTimeout( function() {
