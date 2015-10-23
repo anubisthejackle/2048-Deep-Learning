@@ -2,7 +2,7 @@ function AI() {
 
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(19,4, {
-		epsilon_test_time: 0.1,
+		epsilon_test_time: 0.0,
 		epsilon_min: 0.01,
 		experience_size: 3000000
 	});
