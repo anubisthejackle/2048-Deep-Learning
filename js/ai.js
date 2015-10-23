@@ -104,14 +104,14 @@ AI.prototype.reward = function(meta) {
 
 	}else{
 
-		reward = -(0.5);
+	//	reward = -(0.5);
 
 	}
 
-	if( meta.over && !meta.won ){
+	//if( meta.over && !meta.won ){
 //		console.log('Inverting Reward due to Loss');
-		reward *= -1;
-	}
+	//	reward *= -1;
+	//}
 //	console.log('Reward: ', reward );
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
