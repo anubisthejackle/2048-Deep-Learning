@@ -3,8 +3,8 @@ function AI() {
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(19,4, {
 		epsilon_test_time: 0.1,
-		epsilon_min: 0.1,
-		experience_size: 300000
+		epsilon_min: 0.01,
+		experience_size: 3000000
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
