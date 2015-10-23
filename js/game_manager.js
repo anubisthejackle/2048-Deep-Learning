@@ -94,15 +94,6 @@ GameManager.prototype.actuate = function () {
 
 GameManager.prototype.logResults = function() {
 	var GM = this;
-/*var StateManager = {
-	previousMove: false,
-	maxVal: 0,
-	scores: [],
-	lowestScore: false,
-	medianScore: false,
-	meanScore: false,
-	highestScore: false
-};*/
 
 	StateManager.scores.push( this.score );
 
@@ -164,8 +155,8 @@ GameManager.prototype.move = function(direction) {
 
   if (!this.grid.movesAvailable()) {
 	this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
-	jQuery('#scoreHistory').html('<pre>' + JSON.stringify(this.history, null, 2) + '</pre>');
-    this.over = true; // Game over!
+	//jQuery('#scoreHistory').html('<pre>' + JSON.stringify(this.history, null, 2) + '</pre>');
+	this.over = true; // Game over!
   }
 
   this.actuate();
