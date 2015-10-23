@@ -49,7 +49,7 @@ function GameManager(size, InputManager, Actuator) {
       this.actuator.setRunButton('Stop');
         try{
   		console.log('Initiate brain load');
-  		this.ai.brain = JSONfn.parse( document.getElementById('savestate').value );
+  	//	this.ai.brain = JSONfn.parse( document.getElementById('savestate').value );
   	}catch(err){ /* Do nothing */ console.log('Brain failed to load'); }
     }
   }.bind(this));
