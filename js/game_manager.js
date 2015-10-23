@@ -66,8 +66,20 @@ GameManager.prototype.setup = function () {
   this.grid         = new Grid(this.size);
   this.grid.addStartTiles();
 
-  this.ai           = this.ai || new AI();
-
+  if( typeof this.ai == "undefined"){
+  	try{
+  		
+  		this.ai = JSON.parse( document.getElementById('savestate').value );
+  		
+  	}catch(err){
+  		
+  		this.ai = new AI();
+  		
+  	}
+  }else{
+  	this.ai = this.ai;
+  }
+  
   this.score        = 0;
   this.over         = false;
   this.won          = false;
