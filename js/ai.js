@@ -2,7 +2,9 @@ function AI() {
 
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(19,4, {
-		epsilon_test_time: 0.0 // Shut off random guess
+		epsilon_test_time: 0.1,
+		epsilon_min: 0.1,
+		experience_size: 300000
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
@@ -16,6 +18,12 @@ AI.prototype.getMaxVal = function() {
 				max = curVal.value;
 		});
 	});
+
+	if( StateManager.maxVal < max ){
+		StateManager.maxVal = max;
+		document.getElementById('max-value').innerHTML = 'Max Value is: ' + max;
+	}
+
 	return max;
 }
 
@@ -54,18 +62,17 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 
 	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
 	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
-	inputs.push( ( this.previousMoved )                 ? 1                          : 0 );
-	inputs.push( ( timesMoved > 0 )        ? ( 1 + (-1 / timesMoved ) ) : 0 );
+	inputs.push( ( moved )                 ? 1                          : 0 );
+	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );
 
 	console.log('Inputs: ', inputs);
 	return inputs;
 
 }
 
-AI.prototype.getBest = function(meta) {
-
-	this.grid = meta.grid;
-	var inputs = this.buildInputs( meta.score, meta.moved, meta.timesMoved, meta.previousMove );
+AI.prototype.getBest = function(grid, meta) {
+	this.grid = grid;
+	var inputs = this.buildInputs( meta.score, meta.moved );
 	var action = this.brain.forward( inputs );
 	
 	var move = {
@@ -91,16 +98,9 @@ AI.prototype.reward = function(meta) {
 
 	}else if( meta.score != meta.previous ) {
 
-		reward  = ( 1 + ( -1 / ( meta.score - meta.previous ) ) ) / 2;
-		console.log('Score Reward: ', reward);
-		maxReward = ( 1 + ( (-0.1 * max) / meta.score ) );
-		console.log('Max Reward: ', maxReward);
-		moveReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) / 5  : 0 );
-		console.log('Move Reward: ', moveReward);
-		emptyReward = ( ( meta.empty > 0 ) ? 1 +  ( -1 / meta.empty ) : 0 );
-		console.log('Empty Count: ', meta.empty );
-		console.log('Empty Reward: ', emptyReward);
-		reward = ( reward + maxReward + moveReward + emptyReward ) / 4;
+		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
+		reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
+		reward /= 4;
 
 	}else{
 

@@ -1,4 +1,26 @@
-window.previousMove = {moved: false, move: 0};
+var StateManager = {
+	previousMove: false,
+	maxVal: 0,
+	scores: [],
+	lowestScore: false,
+	medianScore: false,
+	meanScore: false,
+	highestScore: false
+};
+
+function getMedian(values) {
+
+    values.sort( function(a,b) {return a - b;} );
+
+    var half = Math.floor(values.length/2);
+
+    if(values.length % 2)
+        return values[half];
+    else
+        return (values[half-1] + values[half]) / 2.0;
+
+}
+
 function GameManager(size, InputManager, Actuator) {
   this.size         = size; // Size of the grid
   this.inputManager = new InputManager;
@@ -72,6 +94,45 @@ GameManager.prototype.actuate = function () {
 
 GameManager.prototype.logResults = function() {
 	var GM = this;
+/*var StateManager = {
+	previousMove: false,
+	maxVal: 0,
+	scores: [],
+	lowestScore: false,
+	medianScore: false,
+	meanScore: false,
+	highestScore: false
+};*/
+
+	StateManager.scores.push( this.score );
+
+	if( StateManager.lowestScore === false || StateManager.lowestScore > this.score )
+		StateManager.lowestScore = this.score;
+
+	if( StateManager.highestScore === false || StateManager.highestScore < this.score )
+		StateManager.highestScore = this.score;
+
+	if( StateManager.scores.length == 1 ){
+		StateManager.medianScore = this.score;
+		StateManager.meanScore = this.score;
+	}else{
+	
+		var sum = 0;
+		StateManager.medianScore = getMedian(StateManager.scores);
+		for( score in StateManager.scores ){
+
+			sum += StateManager.scores[ score ];
+
+		}
+		console.log( sum );
+		StateManager.meanScore = sum / StateManager.scores.length;
+
+	}
+	
+	document.getElementById('highest-score').innerHTML='Highest Score: ' + StateManager.highestScore;
+	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + StateManager.lowestScore;
+	document.getElementById('median-score').innerHTML='Median Score: ' + StateManager.medianScore;
+	document.getElementById('average-score').innerHTML='Mean Score: ' + StateManager.meanScore;
 	
 	if( !this.win ){
 		setTimeout( function() {
@@ -108,22 +169,19 @@ GameManager.prototype.move = function(direction) {
   }
 
   this.actuate();
+
+	return result;
 }
 
 // moves continuously until game is over
 GameManager.prototype.run = function() {
-	console.log('Previous Move at Start of Run: ', window.previousMove);
-	var best = this.ai.getBest({
+	var best = this.ai.getBest(this.grid, {
 		score: this.score,
-		moved: ( ( window.previousMove ) ? window.previousMove.moved : false ),
-		previousMove: ( ( window.previousMove ) ? window.previousMove.move : 0 ),
-		timesMoved: this.timesMoved,
-		grid: this.grid
+		moved: ( ( StateManager.previousMove ) ? StateManager.previousMove.moved : false ),
+		timesMoved: this.timesMoved
 	});
 	this.previousScore = this.score;
-	this.move(best.move);
-	console.log('Previous Move After Move: ', window.previousMove);
-	window.previousMove = best;
+	StateManager.previousMove = this.move(best.move);
 	this.timesMoved++;
 	this.ai.reward({
 			score: this.score,
