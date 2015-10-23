@@ -99,8 +99,8 @@ AI.prototype.reward = function(meta) {
 	}else if( meta.score != meta.previous ) {
 
 		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
-		reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
-		reward /= 4;
+	//	reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
+	//	reward /= 4;
 
 	}else{
 
