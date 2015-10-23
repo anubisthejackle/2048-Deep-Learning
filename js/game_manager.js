@@ -49,7 +49,7 @@ function GameManager(size, InputManager, Actuator) {
       this.actuator.setRunButton('Stop');
         try{
   		console.log('Initiate brain load');
-  		this.ai.brain = JSON.parse( document.getElementById('savestate').value );
+  		this.ai.brain = JSONfn.parse( document.getElementById('savestate').value );
   	}catch(err){ /* Do nothing */ console.log('Brain failed to load'); }
     }
   }.bind(this));
@@ -134,7 +134,7 @@ GameManager.prototype.logResults = function() {
 	document.getElementById('average-score').innerHTML='Mean Score: ' + StateManager.meanScore;
 
 	// the entire object is now simply string. You can save this somewhere
-	var str = JSON.stringify(this.ai.brain);
+	var str = JSONfn.stringify(this.ai.brain);
 	document.getElementById('savestate').value=str;
 	
 	if( !this.win ){
