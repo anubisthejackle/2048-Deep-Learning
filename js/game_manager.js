@@ -154,7 +154,7 @@ GameManager.prototype.move = function(direction) {
   //console.log(this.grid.valueSum());
 
   if (!this.grid.movesAvailable()) {
-	this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
+	//this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
 	//jQuery('#scoreHistory').html('<pre>' + JSON.stringify(this.history, null, 2) + '</pre>');
 	this.over = true; // Game over!
   }
