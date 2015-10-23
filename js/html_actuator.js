@@ -1,109 +1,106 @@
 function HTMLActuator() {
-  this.tileContainer    = document.getElementsByClassName("tile-container")[0];
-  this.scoreContainer   = document.getElementsByClassName("score-container")[0];
+	this.tileContainer    = document.getElementsByClassName("tile-container")[0];
+	this.scoreContainer   = document.getElementsByClassName("score-container")[0];
 
-  this.score = 0;
+	this.score = 0;
 }
 
 HTMLActuator.prototype.actuate = function (grid, metadata) {
-  var self = this;
+	var self = this;
 
-  window.requestAnimationFrame(function () {
-    self.clearContainer(self.tileContainer);
+	window.requestAnimationFrame(function () {
+		self.clearContainer(self.tileContainer);
 
-    grid.cells.forEach(function (column) {
-      column.forEach(function (cell) {
-        if (cell) {
-          self.addTile(cell);
-        }
-      });
-    });
+		grid.cells.forEach(function (column) {
+			column.forEach(function (cell) {
+				if (cell) {
+					self.addTile(cell);
+				}
+			});
+		});
 
-    self.updateScore(metadata.score);
+		self.updateScore(metadata.score);
 
-  });
+	});
 };
 
 HTMLActuator.prototype.restart = function () {
-  this.clearMessage();
+	this.clearMessage();
 };
 
 HTMLActuator.prototype.clearContainer = function (container) {
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
-  }
+	while (container.firstChild) {
+		container.removeChild(container.firstChild);
+	}
 };
 
 HTMLActuator.prototype.addTile = function (tile) {
-  var self = this;
+	var self = this;
 
-  var element   = document.createElement("div");
-  var position  = tile.previousPosition || { x: tile.x, y: tile.y };
-  positionClass = this.positionClass(position);
+	var element   = document.createElement("div");
+	var position  = tile.previousPosition || { x: tile.x, y: tile.y };
+	positionClass = this.positionClass(position);
 
-  // We can't use classlist because it somehow glitches when replacing classes
-  var classes = ["tile", "tile-" + tile.value, positionClass];
-  this.applyClasses(element, classes);
+	// We can't use classlist because it somehow glitches when replacing classes
+	var classes = ["tile", "tile-" + tile.value, positionClass];
+	this.applyClasses(element, classes);
 
-  element.textContent = tile.value;
+	element.textContent = tile.value;
+	if (tile.previousPosition) {
+		// Make sure that the tile gets rendered in the previous position first
+/*
+function getRandomIntInclusive(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+*/
+		if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
+			window.requestAnimationFrame(function () {
+				classes[2] = self.positionClass({ x: tile.x, y: tile.y });
+				self.applyClasses(element, classes); // Update the position
+			});
+		}
+	} else if (tile.mergedFrom) {
+		classes.push("tile-merged");
+		this.applyClasses(element, classes);
 
-  if (tile.previousPosition) {
-    // Make sure that the tile gets rendered in the previous position first
-    window.requestAnimationFrame(function () {
-      classes[2] = self.positionClass({ x: tile.x, y: tile.y });
-      self.applyClasses(element, classes); // Update the position
-    });
-  } else if (tile.mergedFrom) {
-    classes.push("tile-merged");
-    this.applyClasses(element, classes);
+		// Render the tiles that merged
+		tile.mergedFrom.forEach(function (merged) {
+			self.addTile(merged);
+		});
+	} else {
+		classes.push("tile-new");
+		this.applyClasses(element, classes);
+	}
 
-    // Render the tiles that merged
-    tile.mergedFrom.forEach(function (merged) {
-      self.addTile(merged);
-    });
-  } else {
-    classes.push("tile-new");
-    this.applyClasses(element, classes);
-  }
-
-  // Put the tile on the board
-  this.tileContainer.appendChild(element);
+	// Put the tile on the board
+	this.tileContainer.appendChild(element);
 };
 
 HTMLActuator.prototype.applyClasses = function (element, classes) {
-  element.setAttribute("class", classes.join(" "));
+	element.setAttribute("class", classes.join(" "));
 };
 
 HTMLActuator.prototype.normalizePosition = function (position) {
-  return { x: position.x + 1, y: position.y + 1 };
+	return { x: position.x + 1, y: position.y + 1 };
 };
 
 HTMLActuator.prototype.positionClass = function (position) {
-  position = this.normalizePosition(position);
-  return "tile-position-" + position.x + "-" + position.y;
+	position = this.normalizePosition(position);
+	return "tile-position-" + position.x + "-" + position.y;
 };
 
 HTMLActuator.prototype.updateScore = function (score) {
-  this.clearContainer(this.scoreContainer);
+	this.clearContainer(this.scoreContainer);
 
-  var difference = score - this.score;
-  this.score = score;
+	this.score = score;
 
 	this.maxScore = this.maxScore || score;
 
 	if( this.score > this.maxScore )
 		this.maxScore = this.score;
 
-  this.scoreContainer.textContent = this.score + ' - ' + this.maxScore;
+	this.scoreContainer.textContent = this.score + ' - ' + this.maxScore;
 
-  if (difference > 0) {
-    var addition = document.createElement("div");
-
-    addition.classList.add("score-addition");
-    addition.textContent = "+" + difference;
-
-    this.scoreContainer.appendChild(addition);
-  }
 };
 
 HTMLActuator.prototype.message = function (won) {
@@ -120,9 +117,9 @@ HTMLActuator.prototype.scoreTweetButton = function () {
 
 
 HTMLActuator.prototype.showHint = function(hint) {
-  document.getElementById('feedback-container').innerHTML = ['↑','→','↓','←'][hint];
+	document.getElementById('feedback-container').innerHTML = ['↑','→','↓','←'][hint];
 }
 
 HTMLActuator.prototype.setRunButton = function(message) {
-  document.getElementById('run-button').innerHTML = message;
+	document.getElementById('run-button').innerHTML = message;
 }
