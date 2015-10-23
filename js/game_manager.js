@@ -69,10 +69,10 @@ GameManager.prototype.setup = function () {
   if( typeof this.ai == "undefined"){
   	this.ai = new AI();
   	try{
-  		
+  		console.log('Initiate brain load');
   		this.ai.brain = JSON.parse( document.getElementById('savestate').value );
   		
-  	}catch(err){ /* Do nothing */ }
+  	}catch(err){ /* Do nothing */ console.log('Brain failed to load'); }
   }else{
   	this.ai = this.ai;
   }
