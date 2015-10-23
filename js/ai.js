@@ -65,7 +65,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 	inputs.push( ( moved )                 ? 1                          : 0 );
 	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );
 
-	console.log('Inputs: ', inputs);
+//	console.log('Inputs: ', inputs);
 	return inputs;
 
 }
@@ -109,10 +109,10 @@ AI.prototype.reward = function(meta) {
 	}
 
 	if( meta.over && !meta.won ){
-		console.log('Inverting Reward due to Loss');
+//		console.log('Inverting Reward due to Loss');
 		reward *= -1;
 	}
-	console.log('Reward: ', reward );
+//	console.log('Reward: ', reward );
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
