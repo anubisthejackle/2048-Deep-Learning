@@ -124,6 +124,10 @@ GameManager.prototype.logResults = function() {
 	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + StateManager.lowestScore;
 	document.getElementById('median-score').innerHTML='Median Score: ' + StateManager.medianScore;
 	document.getElementById('average-score').innerHTML='Mean Score: ' + StateManager.meanScore;
+	var json = this.ai.toJSON();
+	// the entire object is now simply string. You can save this somewhere
+	var str = JSON.stringify(json);
+	document.getElementById('savestate').value=str;
 	
 	if( !this.win ){
 		setTimeout( function() {
