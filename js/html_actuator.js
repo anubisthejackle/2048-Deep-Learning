@@ -37,6 +37,9 @@ HTMLActuator.prototype.clearContainer = function (container) {
 };
 
 HTMLActuator.prototype.addTile = function (tile) {
+	if( !document.getElementById('animation_on').checked )
+		return;
+
 	var self = this;
 
 	var element   = document.createElement("div");
@@ -50,17 +53,10 @@ HTMLActuator.prototype.addTile = function (tile) {
 	element.textContent = tile.value;
 	if (tile.previousPosition) {
 		// Make sure that the tile gets rendered in the previous position first
-/*
-function getRandomIntInclusive(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-*/
-	//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
-			window.requestAnimationFrame(function () {
-				classes[2] = self.positionClass({ x: tile.x, y: tile.y });
-				self.applyClasses(element, classes); // Update the position
-			});
-	//	}
+		window.requestAnimationFrame(function () {
+			classes[2] = self.positionClass({ x: tile.x, y: tile.y });
+			self.applyClasses(element, classes); // Update the position
+		});
 	} else if (tile.mergedFrom) {
 		classes.push("tile-merged");
 		this.applyClasses(element, classes);
