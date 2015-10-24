@@ -114,7 +114,9 @@ AI.prototype.reward = function(meta) {
 	//}
 //	console.log('Reward: ', reward );
 	this.brain.backward( reward );
-	this.brain.visSelf(document.getElementById('brainInfo'));
+//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 50 ){
+		this.brain.visSelf(document.getElementById('brainInfo'));
+//	}
 
 }
 
@@ -130,6 +132,8 @@ AI.prototype.rewardMultiple = function(meta){
 	this.brain.backward( maxReward );
 	this.brain.backward( movesReward );
 	this.brain.backward( emptyReward );
-	this.brain.visSelf(document.getElementById('brainInfo'));
+//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
+		this.brain.visSelf(document.getElementById('brainInfo'));
+//	}
 
 }

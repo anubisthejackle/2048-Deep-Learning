@@ -9,7 +9,7 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
 	var self = this;
 
 	window.requestAnimationFrame(function () {
-		self.clearContainer(self.tileContainer);
+		self.tileContainer = self.clearContainer(self.tileContainer);
 
 		grid.cells.forEach(function (column) {
 			column.forEach(function (cell) {
@@ -29,9 +29,11 @@ HTMLActuator.prototype.restart = function () {
 };
 
 HTMLActuator.prototype.clearContainer = function (container) {
-	while (container.firstChild) {
-		container.removeChild(container.firstChild);
-	}
+	
+	var newContainer = container.cloneNode(false);
+	container.parentNode.replaceChild(newContainer,container);
+	return newContainer;
+
 };
 
 HTMLActuator.prototype.addTile = function (tile) {
@@ -53,12 +55,12 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 */
-		if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
+	//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
 			window.requestAnimationFrame(function () {
 				classes[2] = self.positionClass({ x: tile.x, y: tile.y });
 				self.applyClasses(element, classes); // Update the position
 			});
-		}
+	//	}
 	} else if (tile.mergedFrom) {
 		classes.push("tile-merged");
 		this.applyClasses(element, classes);
@@ -90,7 +92,7 @@ HTMLActuator.prototype.positionClass = function (position) {
 };
 
 HTMLActuator.prototype.updateScore = function (score) {
-	this.clearContainer(this.scoreContainer);
+	this.scoreContainer = this.clearContainer(this.scoreContainer);
 
 	this.score = score;
 
