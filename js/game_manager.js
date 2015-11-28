@@ -142,8 +142,8 @@ GameManager.prototype.logResults = function() {
 
 			GM.actuator.restart();
 			GM.setup();
-			document.getElementsByClassName("ai-button")[1].click();
-			document.getElementsByClassName("ai-button")[1].click();
+			document.getElementById("run-button").click();
+			document.getElementById("run-button").click();
 
 		}, 2000 );
 	}
