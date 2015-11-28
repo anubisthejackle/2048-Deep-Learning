@@ -8,17 +8,42 @@ var StateManager = {
 	highestScore: false
 };
 
+var plot = $.plot("#chart", [[0, 1]], {
+	series: {
+		shadowSize: 0,	// Drawing is faster without shadows
+		color: "rgb(246, 94, 59)",
+	},
+	xaxis: {
+		show: false
+	},
+	yaxis: {
+		tickDecimals: 0
+	}
+});
+
+function getChartDataset(a) {
+	var data = [];
+	for (var i = 0; i < a.length; i++) {
+		data.push([i, a[i]]);
+	}
+	return data;
+}
+
+function updateChart() {
+	plot.setData([getChartDataset(StateManager.scores)]);
+	plot.setupGrid();
+	plot.draw();
+}
+
 function getMedian(values) {
+	var val = values.slice(); // clone array to not sort original
+	val.sort( function(a,b) {return a - b;} );
+    var half = Math.floor(val.length/2);
 
-    values.sort( function(a,b) {return a - b;} );
-
-    var half = Math.floor(values.length/2);
-
-    if(values.length % 2)
-        return values[half];
+    if(val.length % 2)
+        return val[half];
     else
-        return (values[half-1] + values[half]) / 2.0;
-
+        return (val[half-1] + val[half]) / 2.0;
 }
 
 function GameManager(size, InputManager, Actuator) {
@@ -127,6 +152,8 @@ GameManager.prototype.logResults = function() {
 		StateManager.meanScore = sum / StateManager.scores.length;
 
 	}
+
+	updateChart();
 	
 	document.getElementById('highest-score').innerHTML='Highest Score: ' + StateManager.highestScore;
 	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + StateManager.lowestScore;
