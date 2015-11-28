@@ -161,10 +161,11 @@ GameManager.prototype.logResults = function() {
 
 	updateChart();
 	
-	document.getElementById('highest-score').innerHTML='Highest Score: ' + StateManager.highestScore;
-	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + StateManager.lowestScore;
-	document.getElementById('median-score').innerHTML='Median Score: ' + StateManager.medianScore;
-	document.getElementById('average-score').innerHTML='Mean Score: ' + StateManager.meanScore;
+	// ~~val double bitwise NOT to convert to int
+	document.getElementById('highest-score').innerHTML='Highest Score: ' + ~~StateManager.highestScore;
+	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + ~~StateManager.lowestScore;
+	document.getElementById('median-score').innerHTML='Median Score: ' + ~~StateManager.medianScore;
+	document.getElementById('average-score').innerHTML='Mean Score: ' + ~~StateManager.meanScore;
 
 	// the entire object is now simply string. You can save this somewhere
 	//var str = JSONfn.stringify(this.ai.brain);
