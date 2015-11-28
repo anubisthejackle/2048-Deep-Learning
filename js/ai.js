@@ -21,7 +21,7 @@ AI.prototype.getMaxVal = function() {
 
 	if( StateManager.maxVal < max ){
 		StateManager.maxVal = max;
-		document.getElementById('max-value').innerHTML = 'Max Value is: ' + max;
+		document.getElementById('max-value').innerHTML = 'Max tile Value is: ' + max;
 	}
 
 	return max;
