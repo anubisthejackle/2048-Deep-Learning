@@ -8,7 +8,8 @@ var StateManager = {
 	highestScore: false
 };
 
-var plot = $.plot("#chart", [[0, 1]], {
+var chart = $("#chart");
+var plot = $.plot(chart, [[0, 1]], {
 	series: {
 		shadowSize: 0,	// Drawing is faster without shadows
 		color: "rgb(246, 94, 59)",
@@ -20,6 +21,11 @@ var plot = $.plot("#chart", [[0, 1]], {
 		tickDecimals: 0
 	}
 });
+
+chart.append("<div style='position:absolute;top:12px;right:13px' id='highest-score'></div>");
+chart.append("<div style='position:absolute;top:30px;right:13px' id='median-score'></div>");
+chart.append("<div style='position:absolute;top:50px;right:13px' id='average-score'></div>");
+chart.append("<div style='position:absolute;top:68px;right:13px' id='lowest-score'></div>");
 
 function getChartDataset(a) {
 	var data = [];
