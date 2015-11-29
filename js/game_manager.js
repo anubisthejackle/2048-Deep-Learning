@@ -8,17 +8,48 @@ var StateManager = {
 	highestScore: false
 };
 
+var chart = $("#chart");
+var plot = $.plot(chart, [[0, 1]], {
+	series: {
+		shadowSize: 0,	// Drawing is faster without shadows
+		color: "rgb(246, 94, 59)",
+	},
+	xaxis: {
+		show: false
+	},
+	yaxis: {
+		tickDecimals: 0
+	}
+});
+
+chart.append("<div style='position:absolute;top:12px;right:13px' id='highest-score'></div>");
+chart.append("<div style='position:absolute;top:30px;right:13px' id='median-score'></div>");
+chart.append("<div style='position:absolute;top:50px;right:13px' id='average-score'></div>");
+chart.append("<div style='position:absolute;top:68px;right:13px' id='lowest-score'></div>");
+
+function getChartDataset(a) {
+	var data = [];
+	for (var i = 0; i < a.length; i++) {
+		data.push([i, a[i]]);
+	}
+	return data;
+}
+
+function updateChart() {
+	plot.setData([getChartDataset(StateManager.scores)]);
+	plot.setupGrid();
+	plot.draw();
+}
+
 function getMedian(values) {
+	var val = values.slice(); // clone array to not sort original
+	val.sort( function(a,b) {return a - b;} );
+    var half = Math.floor(val.length/2);
 
-    values.sort( function(a,b) {return a - b;} );
-
-    var half = Math.floor(values.length/2);
-
-    if(values.length % 2)
-        return values[half];
+    if(val.length % 2)
+        return val[half];
     else
-        return (values[half-1] + values[half]) / 2.0;
-
+        return (val[half-1] + val[half]) / 2.0;
 }
 
 function GameManager(size, InputManager, Actuator) {
@@ -127,11 +158,14 @@ GameManager.prototype.logResults = function() {
 		StateManager.meanScore = sum / StateManager.scores.length;
 
 	}
+
+	updateChart();
 	
-	document.getElementById('highest-score').innerHTML='Highest Score: ' + StateManager.highestScore;
-	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + StateManager.lowestScore;
-	document.getElementById('median-score').innerHTML='Median Score: ' + StateManager.medianScore;
-	document.getElementById('average-score').innerHTML='Mean Score: ' + StateManager.meanScore;
+	// ~~val double bitwise NOT to convert to int
+	document.getElementById('highest-score').innerHTML='Highest Score: ' + ~~StateManager.highestScore;
+	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + ~~StateManager.lowestScore;
+	document.getElementById('median-score').innerHTML='Median Score: ' + ~~StateManager.medianScore;
+	document.getElementById('average-score').innerHTML='Mean Score: ' + ~~StateManager.meanScore;
 
 	// the entire object is now simply string. You can save this somewhere
 	//var str = JSONfn.stringify(this.ai.brain);
@@ -142,8 +176,8 @@ GameManager.prototype.logResults = function() {
 
 			GM.actuator.restart();
 			GM.setup();
-			document.getElementsByClassName("ai-button")[1].click();
-			document.getElementsByClassName("ai-button")[1].click();
+			document.getElementById("run-button").click();
+			document.getElementById("run-button").click();
 
 		}, 2000 );
 	}
