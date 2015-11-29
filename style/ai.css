@@ -32,13 +32,15 @@
   float: right;
 }
 
-#hint-button-container, #feedback-container {
-  float: left;
+#chart-container {
+  width: 500px;
+  height: 200px;
 }
 
-#feedback-container {
-  background: #8f7a66;
-  color: #f9f6f2;
-  margin-left: 1em;
-  font-weight: bold;
+#chart {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  line-height: 1.2em;
+  color: #444;
 }

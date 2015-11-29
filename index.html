@@ -31,20 +31,18 @@
     <p class="game-intro">Join the numbers and get to the <strong>2048 tile!</strong></p>
 
     <div class="controls">
-      <div id="hint-button-container">
-        <button id="hint-button" class="ai-button">Get Hint</button>
-      </div>
-      <div id="feedback-container"> </div>
+      <input type="checkbox" id="animation_on" checked="CHECKED" /> Animation
       <div id="run-button-container">
         <button id="run-button" class="ai-button">Auto-run</button>
       </div>
     </div>
-    <div><input type="checkbox" id="animation_on" checked="CHECKED" /> Animation?</div>
+
+    <div id="chart-container">
+      <div id="chart"></div>
+    </div>
+
     <div id="max-value"></div>
-    <div id="highest-score"></div>
-    <div id="median-score"></div>
-    <div id="average-score"></div>
-    <div id="lowest-score"></div>
+
     <div class="game-container">
       <div class="game-message">
         <p></p>
@@ -103,6 +101,7 @@
   <script src="js/grid.js"></script>
   <script src="js/tile.js"></script>
   <script src="js/ai.js"></script>
+  <script src="js/jquery.flot.min.js"></script>
   <script src="js/game_manager.js"></script>
   <script src="js/application.js"></script>
 </body>
