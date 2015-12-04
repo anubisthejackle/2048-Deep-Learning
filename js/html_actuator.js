@@ -97,7 +97,7 @@ HTMLActuator.prototype.updateScore = function (score) {
 	if( this.score > this.maxScore )
 		this.maxScore = this.score;
 
-	this.scoreContainer.textContent = this.score + ' - ' + this.maxScore;
+	this.scoreContainer.textContent = this.score.toFixed(2) + ' - ' + this.maxScore.toFixed(2);
 
 };
 

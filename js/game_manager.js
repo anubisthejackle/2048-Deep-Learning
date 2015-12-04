@@ -15,7 +15,7 @@ var plot = $.plot(chart, [[0, 1]], {
 		color: "rgb(246, 94, 59)",
 	},
 	xaxis: {
-		show: false
+		show: true  // Maybe display number of games? rather than 1 - 50..
 	},
 	yaxis: {
 		tickDecimals: 0
@@ -27,16 +27,23 @@ chart.append("<div style='position:absolute;top:30px;right:13px' id='median-scor
 chart.append("<div style='position:absolute;top:50px;right:13px' id='average-score'></div>");
 chart.append("<div style='position:absolute;top:68px;right:13px' id='lowest-score'></div>");
 
-function getChartDataset(a) {
+function getChartDataset(a,maxval) {
 	var data = [];
-	for (var i = 0; i < a.length; i++) {
-		data.push([i, a[i]]);
+	var max = maxval;
+	if (max > a.length){  // If length of results is less than max, let it populate the chart.
+		for (var i = 0; i < a.length; i++) {
+			data.push([i, a[i]]);
+		}
+	}else if (max <= a.length){  // if the chart has more values than max, trim extra from the start.
+		for (var i = (a.length - max); i < a.length; i++) {
+			data.push([i, a[i]]);
+		}
 	}
 	return data;
 }
 
 function updateChart() {
-	plot.setData([getChartDataset(StateManager.scores)]);
+	plot.setData([getChartDataset(StateManager.scores,50)]); //I thing 50 is enough.
 	plot.setupGrid();
 	plot.draw();
 }
