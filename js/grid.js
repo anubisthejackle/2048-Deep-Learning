@@ -171,6 +171,7 @@ Grid.prototype.move = function (direction) {
   var traversals = this.buildTraversals(vector);
   var moved      = false;
   var score      = 0;
+  var moves		 = 1;
   var won        = false;
 
   // Save the current tile positions and remove merger information
@@ -201,7 +202,7 @@ Grid.prototype.move = function (direction) {
           tile.updatePosition(positions.next);
 
           // Update the score
-          score += merged.value;
+          score += (merged.value*5/moves); 
 
           // The mighty 2048 tile
           if (merged.value === 2048) {
@@ -219,6 +220,7 @@ Grid.prototype.move = function (direction) {
           self.playerTurn = false;
           //console.log('setting player turn to ', self.playerTurn);
           moved = true; // The tile moved from its original cell!
+          moves++;
         }
       }
     });

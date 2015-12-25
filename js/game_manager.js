@@ -5,7 +5,8 @@ var StateManager = {
 	lowestScore: false,
 	medianScore: false,
 	meanScore: false,
-	highestScore: false
+	highestScore: false,
+	gamesPlayed: false,
 };
 
 var chart = $("#chart");
@@ -15,7 +16,7 @@ var plot = $.plot(chart, [[0, 1]], {
 		color: "rgb(246, 94, 59)",
 	},
 	xaxis: {
-		show: false
+		show: true
 	},
 	yaxis: {
 		tickDecimals: 0
@@ -26,17 +27,25 @@ chart.append("<div style='position:absolute;top:12px;right:13px' id='highest-sco
 chart.append("<div style='position:absolute;top:30px;right:13px' id='median-score'></div>");
 chart.append("<div style='position:absolute;top:50px;right:13px' id='average-score'></div>");
 chart.append("<div style='position:absolute;top:68px;right:13px' id='lowest-score'></div>");
+chart.append("<div style='position:absolute;top:155px;right:13px' id='games-played'></div>");
 
-function getChartDataset(a) {
+function getChartDataset(a,maxval) {
 	var data = [];
-	for (var i = 0; i < a.length; i++) {
-		data.push([i, a[i]]);
+	var max = maxval;
+	if (max > a.length){  // If length of results is less than max, let it populate the chart.
+		for (var i = 0; i < a.length; i++) {
+			data.push([i, a[i]]);
+		}
+	}else if (max <= a.length){  // if the chart has more values than max, trim extra from the start.
+		for (var i = (a.length - max); i < a.length; i++) {
+			data.push([i, a[i]]);
+		}
 	}
 	return data;
 }
 
 function updateChart() {
-	plot.setData([getChartDataset(StateManager.scores)]);
+	plot.setData([getChartDataset(StateManager.scores,50)]); //I thing 50 is enough.
 	plot.setupGrid();
 	plot.draw();
 }
@@ -156,6 +165,7 @@ GameManager.prototype.logResults = function() {
 		}
 		console.log( sum );
 		StateManager.meanScore = sum / StateManager.scores.length;
+		StateManager.gamesPlayed = StateManager.scores.length;
 
 	}
 
@@ -166,6 +176,7 @@ GameManager.prototype.logResults = function() {
 	document.getElementById('lowest-score').innerHTML='Lowest Score: ' + ~~StateManager.lowestScore;
 	document.getElementById('median-score').innerHTML='Median Score: ' + ~~StateManager.medianScore;
 	document.getElementById('average-score').innerHTML='Mean Score: ' + ~~StateManager.meanScore;
+	document.getElementById('games-played').innerHTML='Games Played: ' + ~~StateManager.gamesPlayed;
 
 	// the entire object is now simply string. You can save this somewhere
 	//var str = JSONfn.stringify(this.ai.brain);
