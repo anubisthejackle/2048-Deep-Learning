@@ -102,12 +102,12 @@ AI.prototype.reward = function(meta) {
 		reward = 1;
 
 	}else if( meta.score != meta.previous ) {
-		reward = (max > 0) ? max / 2048 : 0;
-		//reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
-		reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
-		if( reward > 0 ){
-			reward /= 2;
-		}
+		//reward = (max > 0) ? max / 2048 : 0;
+		reward  = ( meta.score > meta.previous) ? ( meta.score - meta.previous ) / meta.previous : 0;
+		//reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
+		//if( reward > 0 ){
+		//	reward /= 2;
+		//}
 
 	}else{
 
