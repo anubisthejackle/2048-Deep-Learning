@@ -97,7 +97,7 @@ AI.prototype.reward = function(meta) {
 		reward = 1;
 
 	}else{
-		reward = (2048 - max)/2048;
+		reward = (max > 0) ? max / 2048 : 0;
 	}
 	//else if( meta.score != meta.previous ) {
 
