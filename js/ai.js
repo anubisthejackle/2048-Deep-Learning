@@ -4,7 +4,8 @@ function AI() {
 	this.brain = new deepqlearn.Brain(19,4, {
 		epsilon_test_time: 0.0,
 		epsilon_min: 0.01,
-		experience_size: 3000000
+		experience_size: 3000000,
+		temporal_window: 10
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
