@@ -96,17 +96,20 @@ AI.prototype.reward = function(meta) {
 
 		reward = 1;
 
-	}else if( meta.score != meta.previous ) {
+	}else{
+		reward = (2048 - max)/2048;
+	}
+	//else if( meta.score != meta.previous ) {
 
 		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
 	//	reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
 	//	reward /= 4;
 
-	}else{
+	//}else{
 
 	//	reward = -(0.5);
 		reward = 0;
-	}
+	//}
 
 	//if( meta.over && !meta.won ){
 //		console.log('Inverting Reward due to Loss');
