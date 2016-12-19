@@ -7,7 +7,7 @@ function AI() {
 		experience_size: 3000000,
 		temporal_window: 100,
 		start_learn_threshold: 1,
-		game: 0.9
+		gama: 0.9
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
