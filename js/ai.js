@@ -111,8 +111,8 @@ AI.prototype.reward = function(meta) {
 
 	}else{
 
-		reward = -(0.5);
-		//reward = 0;
+		//reward = -(0.5);
+		reward = 0;
 	}
 
 	//if( meta.over && !meta.won ){
