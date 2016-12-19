@@ -21,10 +21,12 @@ AI.prototype.getMaxVal = function() {
 
 	if( StateManager.maxVal < max ){
 		StateManager.maxVal = max;
-		document.getElementById('max-value').innerHTML = 'Max tile Value is: ' + max;
 	}
-
+	
+	document.getElementById('max-value').innerHTML = 'Session-wide Max tile Value is: ' + StateManager.maxVal + '<br />Current Game Max tile Value is: ' + max;
+	
 	return max;
+
 }
 
 AI.prototype.getEmptyCount = function() {
