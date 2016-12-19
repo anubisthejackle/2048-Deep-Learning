@@ -116,10 +116,10 @@ AI.prototype.reward = function(meta) {
 		reward = 0;
 	}
 
-	//if( meta.over && !meta.won ){
-//		console.log('Inverting Reward due to Loss');
-	//	reward *= -1;
-	//}
+	if( meta.over && !meta.won ){
+		console.log('Inverting Reward due to Loss');
+		reward *= -1;
+	}
 	console.log('Reward: ', reward );
 	this.brain.backward( reward );
 //	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 50 ){
