@@ -58,7 +58,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 		row.forEach( function( curVal ) {
 			
 			if( curVal ){
-				inputs.push( ( 1 + ( -1 / curVal.value ) ) );
+				inputs.push( curVal.value / 2048 );
 			}else{
 				inputs.push(0);
 			}
@@ -101,20 +101,17 @@ AI.prototype.reward = function(meta) {
 
 		reward = 1;
 
-	}else{
+	}else if( meta.score != meta.previous ) {
 		reward = (max > 0) ? max / 2048 : 0;
-	}
-	//else if( meta.score != meta.previous ) {
-
 		//reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
 	//	reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
 	//	reward /= 4;
 
-	//}else{
+	}else{
 
-	//	reward = -(0.5);
+		reward = -(0.5);
 		//reward = 0;
-	//}
+	}
 
 	//if( meta.over && !meta.won ){
 //		console.log('Inverting Reward due to Loss');
