@@ -3,12 +3,12 @@ function AI() {
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(19,4, {
 		epsilon_test_time: 0.0,
-		epsilon_min: 0.01,
-		experience_size: 30000,
-		temporal_window: 100,
-		start_learn_threshold: 100,
-		learnings_steps_burnin: 100,
-		gama: 0.9
+		epsilon_min: 0.001,
+		experience_size: 300000,
+		temporal_window: 10000,
+		start_learn_threshold: 10,
+		learnings_steps_burnin: 10000,
+		gama: 0.09
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
