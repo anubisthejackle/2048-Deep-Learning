@@ -60,6 +60,11 @@ KeyboardInputManager.prototype.listen = function () {
     self.emit('run')
   })
 
+  var saveButton = document.getElementById('save-button');
+  saveButton.addEventListener('click', AI.savenetwork);
+  
+  var loadButton = document.getElementById('load-button');
+  loadButton.addEventListener('click', AI.loadnetwork);
 
   // Listen to swipe events
   var gestures = [Hammer.DIRECTION_UP, Hammer.DIRECTION_RIGHT,
