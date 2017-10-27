@@ -1,14 +1,16 @@
 function AI() {
-
+	
+	var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(12,4, {
-		epsilon_test_time: 0.0,
+		epsilon_test_time: 0.05,
 		epsilon_min: 0.001,
-		experience_size: 300,
-		temporal_window: 300,
-		start_learn_threshold: 2,
-		learnings_steps_burnin: 300,
-		gama: 0.09
+		experience_size: 30000,
+		temporal_window: 1,
+		start_learn_threshold: 1000,
+		learnings_steps_burnin: 3000,
+		gama: 0.7,
+		tdtrainer_options: {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01}
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
