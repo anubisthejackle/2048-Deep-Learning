@@ -61,10 +61,10 @@ KeyboardInputManager.prototype.listen = function () {
   })
 
   var saveButton = document.getElementById('save-button');
-  saveButton.addEventListener('click', AI.savenetwork);
+  saveButton.addEventListener('click', AI.savenet);
   
   var loadButton = document.getElementById('load-button');
-  loadButton.addEventListener('click', AI.loadnetwork);
+  loadButton.addEventListener('click', AI.loadnet);
 
   // Listen to swipe events
   var gestures = [Hammer.DIRECTION_UP, Hammer.DIRECTION_RIGHT,
