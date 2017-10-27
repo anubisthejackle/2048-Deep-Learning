@@ -92,27 +92,28 @@ AI.prototype.setMoved = function(moved){
 AI.prototype.reward = function(meta) {
 
 	var max = this.getMaxVal();	
-	if( meta.over && meta.won ){
+//	if( meta.over && meta.won ){
 
-		reward = 1;
+//		reward = 1;
 
-	}else if( meta.score != meta.previous ) {
+//	}else if( meta.score != meta.previous ) {
 
-		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
+//		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
 	//	reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
 	//	reward /= 4;
 
-	}else{
+//	}else{
 
 	//	reward = -(0.5);
-		reward = 0;
-	}
+//		reward = 0;
+//	}
 
 	//if( meta.over && !meta.won ){
 //		console.log('Inverting Reward due to Loss');
 	//	reward *= -1;
 	//}
 //	console.log('Reward: ', reward );
+        reward = this.getEmptyCount();	
 	this.brain.backward( reward );
 //	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 50 ){
 		this.brain.visSelf(document.getElementById('brainInfo'));
