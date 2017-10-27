@@ -4,7 +4,7 @@ function AI() {
 	this.brain = new deepqlearn.Brain(19,4, {
 		epsilon_test_time: 0.0,
 		epsilon_min: 0.001,
-		experience_size: 300000,
+		experience_size: 3000,
 		temporal_window: 1000,
 		start_learn_threshold: 10,
 		learnings_steps_burnin: 10000,
