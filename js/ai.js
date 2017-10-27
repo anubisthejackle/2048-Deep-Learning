@@ -121,7 +121,7 @@ AI.prototype.rewardMultiple = function(meta){
 }
 
 AI.prototype.savenet = function() {
-      var j = w.agents[0].brain.value_net.toJSON();
+      var j = this.brain.value_net.toJSON();
       var t = JSON.stringify(j);
       document.getElementById('tt').value = t;
 }
@@ -129,5 +129,5 @@ AI.prototype.savenet = function() {
 AI.prototype.loadnet = function() {
       var t = document.getElementById('tt').value;
       var j = JSON.parse(t);
-      w.agents[0].brain.value_net.fromJSON(j);
+      this.brain.value_net.fromJSON(j);
 }
