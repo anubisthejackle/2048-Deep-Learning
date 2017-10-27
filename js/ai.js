@@ -123,11 +123,11 @@ AI.prototype.rewardMultiple = function(meta){
 AI.prototype.savenet = function() {
       var j = this.brain.value_net.toJSON();
       var t = JSON.stringify(j);
-      document.getElementById('tt').value = t;
+      document.getElementById('savestate').value = t;
 }
     
 AI.prototype.loadnet = function() {
-      var t = document.getElementById('tt').value;
+      var t = document.getElementById('savestate').value;
       var j = JSON.parse(t);
       this.brain.value_net.fromJSON(j);
 }
