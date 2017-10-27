@@ -4,7 +4,11 @@ function AI() {
 	this.brain = new deepqlearn.Brain(19,4, {
 		epsilon_test_time: 0.0,
 		epsilon_min: 0.01,
-		experience_size: 3000000
+		experience_size: 30000,
+		temporal_window: 100,
+		start_learn_threshold: 100,
+		learnings_steps_burnin: 100,
+		gama: 0.9
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
@@ -21,10 +25,12 @@ AI.prototype.getMaxVal = function() {
 
 	if( StateManager.maxVal < max ){
 		StateManager.maxVal = max;
-		document.getElementById('max-value').innerHTML = 'Max tile Value is: ' + max;
 	}
-
+	
+	document.getElementById('max-value').innerHTML = 'Session-wide Max tile Value is: ' + StateManager.maxVal + '<br />Current Game Max tile Value is: ' + max;
+	
 	return max;
+
 }
 
 AI.prototype.getEmptyCount = function() {
@@ -53,7 +59,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 		row.forEach( function( curVal ) {
 			
 			if( curVal ){
-				inputs.push( ( 1 + ( -1 / curVal.value ) ) );
+				inputs.push( curVal.value / 2048 );
 			}else{
 				inputs.push(0);
 			}
