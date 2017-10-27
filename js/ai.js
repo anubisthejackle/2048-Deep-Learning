@@ -2,7 +2,7 @@ function AI() {
 	
 	var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
 	this.moves = [0,1,2,3];
-	this.brain = new deepqlearn.Brain(12,4, {
+	this.brain = new deepqlearn.Brain(13,4, {
 		epsilon_test_time: 0.05,
 		epsilon_min: 0.001,
 		experience_size: 30000,
@@ -14,6 +14,7 @@ function AI() {
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
+	this.moved = false;
 }
 
 AI.prototype.getMaxVal = function() {
@@ -67,7 +68,8 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 			}
 		});
 	});
-
+	this.moved = moved;
+	inputs.push( ( moved )                 ? 1                          : 0 );
 	/*inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
 	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
 	inputs.push( ( moved )                 ? 1                          : 0 );
@@ -103,6 +105,9 @@ AI.prototype.reward = function(meta) {
 		reward = reward / 12;
 	}
 	reward += this.getMaxVal() / 2048;
+	
+	if( this.moved == false ) reward = 0;
+	
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
