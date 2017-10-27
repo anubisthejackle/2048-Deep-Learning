@@ -96,7 +96,10 @@ AI.prototype.setMoved = function(moved){
 
 AI.prototype.reward = function(meta) {
 
-        reward = this.getEmptyCount();	
+        reward = this.getEmptyCount();
+	if( reward > 0 ){
+		reward = reward / 12;
+	}
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
