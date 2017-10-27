@@ -5,9 +5,9 @@ function AI() {
 		epsilon_test_time: 0.0,
 		epsilon_min: 0.001,
 		experience_size: 300,
-		temporal_window: 100,
-		start_learn_threshold: 1,
-		learnings_steps_burnin: 500,
+		temporal_window: 300,
+		start_learn_threshold: 2,
+		learnings_steps_burnin: 300,
 		gama: 0.09
 	});
 	this.previousMove = 0;	
