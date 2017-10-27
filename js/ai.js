@@ -5,7 +5,7 @@ function AI() {
 		epsilon_test_time: 0.0,
 		epsilon_min: 0.001,
 		experience_size: 300000,
-		temporal_window: 10000,
+		temporal_window: 1000,
 		start_learn_threshold: 10,
 		learnings_steps_burnin: 10000,
 		gama: 0.09
