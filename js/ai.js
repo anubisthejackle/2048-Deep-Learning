@@ -71,7 +71,6 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 	inputs.push( ( moved )                 ? 1                          : 0 );
 	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );
 
-//	console.log('Inputs: ', inputs);
 	return inputs;
 
 }
@@ -97,33 +96,9 @@ AI.prototype.setMoved = function(moved){
 
 AI.prototype.reward = function(meta) {
 
-	var max = this.getMaxVal();	
-//	if( meta.over && meta.won ){
-
-//		reward = 1;
-
-//	}else if( meta.score != meta.previous ) {
-
-//		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
-	//	reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
-	//	reward /= 4;
-
-//	}else{
-
-	//	reward = -(0.5);
-//		reward = 0;
-//	}
-
-	//if( meta.over && !meta.won ){
-//		console.log('Inverting Reward due to Loss');
-	//	reward *= -1;
-	//}
-//	console.log('Reward: ', reward );
         reward = this.getEmptyCount();	
 	this.brain.backward( reward );
-//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 50 ){
-		this.brain.visSelf(document.getElementById('brainInfo'));
-//	}
+	this.brain.visSelf(document.getElementById('brainInfo'));
 
 }
 
@@ -143,4 +118,16 @@ AI.prototype.rewardMultiple = function(meta){
 		this.brain.visSelf(document.getElementById('brainInfo'));
 //	}
 
+}
+
+AI.prototype.savenet = function() {
+      var j = w.agents[0].brain.value_net.toJSON();
+      var t = JSON.stringify(j);
+      document.getElementById('tt').value = t;
+}
+    
+AI.prototype.loadnet = function() {
+      var t = document.getElementById('tt').value;
+      var j = JSON.parse(t);
+      w.agents[0].brain.value_net.fromJSON(j);
 }
