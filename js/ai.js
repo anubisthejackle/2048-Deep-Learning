@@ -7,7 +7,7 @@ function AI() {
 		experience_size: 3000,
 		temporal_window: 1000,
 		start_learn_threshold: 10,
-		learnings_steps_burnin: 10000,
+		learnings_steps_burnin: 5000,
 		gama: 0.09
 	});
 	this.previousMove = 0;	
