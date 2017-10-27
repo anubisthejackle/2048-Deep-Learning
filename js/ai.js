@@ -102,6 +102,7 @@ AI.prototype.reward = function(meta) {
 	if( reward > 0 ){
 		reward = reward / 12;
 	}
+	reward += this.getMaxVal() / 2048;
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
