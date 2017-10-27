@@ -94,6 +94,14 @@ function GameManager(size, InputManager, Actuator) {
     }
   }.bind(this));
 
+  this.inputManager.on('savenet', function() {
+	  this.ai.savenet();
+  }
+
+  this.inputManager.on('loadnet', function() {
+	  this.ai.loadnet();
+  }
+	
   this.setup();
 }
 
