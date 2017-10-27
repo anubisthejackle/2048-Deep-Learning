@@ -4,10 +4,10 @@ function AI() {
 	this.brain = new deepqlearn.Brain(12,4, {
 		epsilon_test_time: 0.0,
 		epsilon_min: 0.001,
-		experience_size: 3000,
-		temporal_window: 1000,
-		start_learn_threshold: 10,
-		learnings_steps_burnin: 5000,
+		experience_size: 300,
+		temporal_window: 100,
+		start_learn_threshold: 1,
+		learnings_steps_burnin: 500,
 		gama: 0.09
 	});
 	this.previousMove = 0;	
