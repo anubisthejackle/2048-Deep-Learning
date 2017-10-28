@@ -106,10 +106,12 @@ AI.prototype.reward = function(meta) {
 	}*/
 	reward = this.getMaxVal() / 2048;
 	
-	if( this.moved != false ){
-		this.brain.backward( reward );
-		this.brain.visSelf(document.getElementById('brainInfo'));
+	if( this.moved == false ){
+		reward = reward * -1;
 	}
+	
+	this.brain.backward( reward );
+	this.brain.visSelf(document.getElementById('brainInfo'));
 
 }
 
