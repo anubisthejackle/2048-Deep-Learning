@@ -115,7 +115,7 @@ AI.prototype.reward = function(meta) {
 		return;
 	}
 	
-	reward = meta.score;
+	reward = (meta.score - meta.previous);
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
