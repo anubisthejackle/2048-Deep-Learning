@@ -1,0 +1,107 @@
+<div>
+  <div class="container container-editor">
+  </div>
+  <div class="container container-editor container-float-editor">
+    <div id='editor'></div>
+  </div>
+  <div class="container" id='container-2048'>
+    <a href='https://github.com/voltrevo/2048'><img style='position: fixed; top: 0; right: 0; border: 0;' src='https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67' alt='Fork me on GitHub' data-canonical-src='https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png'></a>
+
+    <div class="heading">
+      <h1 class="title">2048</h1>
+      <div class="scores-container">
+        <div class="score-container">0</div>
+        <div class="best-container">0</div>
+      </div>
+    </div>
+
+    <div class="above-game">
+      <p class="game-intro">Join the numbers and get to the <strong>2048 tile!</strong></p>
+      <a class="restart-button">New Game</a>
+    </div>
+
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+          <a class="keep-playing-button">Keep going</a>
+          <a class="retry-button">Try again</a>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
+
+      <div class="tile-container">
+
+      </div>
+    </div>
+
+    <div id='dynamic-info-box'>
+      <hr>
+      <p>
+        Suggestion:
+        <span id='suggestion-text'></span>
+        <span class='basic-button' id='reload'>&#x21bb;</span>
+      </p>
+    </div>
+
+    <!-- <div id='battle-ui' style='padding-top: 20px;'>
+      Arena: <input type='text' id='arena-text'>
+      Goal: <select id='goal-select'>
+        <option>256</option>
+        <option>512</option>
+        <option>1024</option>
+        <option selected>2048</option>
+        <option>4096</option>
+        <option>8192</option>
+        <option>16384</option>
+        <option>32768</option>
+        <option>65536</option>
+      </select>
+      <span class='basic-button' id='start-battle-button'>Start Battle</span>
+      <div id='battle-status'></status>
+    </div> -->
+
+    <hr>
+
+    <p class="game-explanation">
+      <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When two tiles with the same number touch, they <strong>merge into one!</strong> Press <strong>backspace</strong> to undo and <strong>full stop</strong> to accept the suggested move.
+    </p>
+    <p>
+      This game is designed to be an <strong>algorithmic challenge</strong>! More info <a href="https://github.com/voltrevo/2048">here</a>.
+    </p>
+    <hr>
+    <p>
+    <strong class="important">Note:</strong> This site is <strong>not</strong> the official version of 2048, but you can play the official version on your phone via <a href="http://git.io/2048">http://git.io/2048.</a> This site is a derivative or fake, and should be used with caution ;-).
+    </p>
+    <hr>
+    <p>
+    Created by <a href="https://andrewmorris.io">Andrew Morris</a>. Based on <a href="https://gabrielecirulli.github.io/2048/">2048 by Gabrielle Cirulli</a> and <a href="https://itunes.apple.com/us/app/1024!/id823499224">1024 by Veewo Studio</a> and conceptually similar to <a href="http://asherv.com/threes/">Threes by Asher Vollmer</a>.
+    </p>
+  </div>
+</div>
