@@ -108,14 +108,14 @@ AI.prototype.reward = function(meta) {
 	if( reward > 0 ){
 		reward = reward / 12;
 	}*/
-	//reward = this.getMaxVal() / 2048;
+	reward = this.getMaxVal() / 2048;
 	
 	if( this.moved == false ){
 		//reward = reward * -1;
 		return;
 	}
 	
-	reward = (meta.score - meta.previous) / 2048;
+	//reward = (meta.score - meta.previous) / 2048;
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 
