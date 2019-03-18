@@ -236,9 +236,6 @@ GameManager.prototype.run = function() {
 		moved: ( ( StateManager.previousMove ) ? StateManager.previousMove.moved : false ),
 		timesMoved: this.timesMoved
 	});
-	this.previousScore = this.score;
-	StateManager.previousMove = this.move(best.move);
-	this.timesMoved++;
 	this.ai.reward({
 			score: this.score,
 			previous: this.previousScore,
@@ -247,6 +244,10 @@ GameManager.prototype.run = function() {
 			timesMoved: this.timesMoved,
 			empty: this.ai.getEmptyCount()
 		});
+	this.previousScore = this.score;
+	StateManager.previousMove = this.move(best.move);
+	this.timesMoved++;
+	
   var timeout = animationDelay;
   if (this.running && !this.over && !this.won) {
     var self = this;
