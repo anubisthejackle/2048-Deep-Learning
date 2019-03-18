@@ -109,10 +109,8 @@ AI.prototype.reward = function(meta) {
 	empty = this.getEmptyCount();
 	if( this.previousEmpty > 0 && this.previousEmpty > empty ){
 		reward = ((16 - empty) * -1)/16; // Negative reward based on number of filled squares
-	}else if( this.previousEmpty > 0 && this.previousEmpty < empty ){
+	}else if( this.previousEmpty > 0 && this.previousEmpty <= empty ){
 		reward = empty / 16; // Positive reward based on number of empty squares
-	}else{
-		reward = 0; // Neutral reward if the number of empty squares stayes the same.	
 	}
         
 	this.previousEmpty = empty;
