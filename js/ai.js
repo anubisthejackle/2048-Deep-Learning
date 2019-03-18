@@ -15,6 +15,7 @@ function AI() {
 	this.previousMove = 0;	
 	this.previousMoved = false;
 	this.moved = false;
+	this.previousEmpty = 0;
 }
 
 AI.prototype.getMaxVal = function() {
@@ -104,10 +105,17 @@ AI.prototype.reward = function(meta) {
 		this.brain.backward( -1 );
 		return;
 	}
-        reward = this.getEmptyCount();
-	if( reward > 0 ){
-		reward = reward / 12;
+	empty = this.getEmptyCount();
+	if( this.previousEmpty > 0 && this.previousEmpty > empty ){
+		reward = ((12 - empty) * -1)/12; // Negative reward based on number of filled squares
+	}elseif( this.previousEmpty > 0 && this.previousEmpty < empty ){
+		reward = empty / 12; // Positive reward based on number of empty squares
+	}else{
+		reward = 0; // Neutral reward if the number of empty squares stayes the same.	
 	}
+        
+	this.previousEmpty = empty;
+	
 	reward += this.getMaxVal() / 2048;
 	
 	if( this.moved == false ){
