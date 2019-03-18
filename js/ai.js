@@ -6,11 +6,11 @@ function AI() {
 		epsilon_test_time: 0.05,
 		epsilon_min: 0.001,
 		experience_size: 30000,
-		temporal_window: 2,
+		temporal_window: 10,
 		start_learn_threshold: 1000,
 		learnings_steps_burnin: 3000,
 		gama: 0.7,
-		tdtrainer_options: {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01}
+		tdtrainer_options: {method: 'adadelta', learning_rate:0.001, momentum:0.9, batch_size:1, l2_decay:0.01}
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
