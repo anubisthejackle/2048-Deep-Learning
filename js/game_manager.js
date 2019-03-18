@@ -125,6 +125,8 @@ GameManager.prototype.setup = function () {
   }
   
   this.score        = 0;
+  this.previousScore = 0;
+  this.previousMove = false;
   this.over         = false;
   this.won          = false;
   this.timesMoved   = 0;
