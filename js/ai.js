@@ -104,13 +104,16 @@ AI.prototype.reward = function(meta) {
 
 	if( this.over && !this.won ){
 		this.brain.backward( -1 );
+		console.log('Failure Reward:', -1);
 		return;
 	}
 	empty = this.getEmptyCount();
 	if( this.previousEmpty > 0 && this.previousEmpty > empty ){
 		reward = ((16 - empty) * -1)/16; // Negative reward based on number of filled squares
+		console.log('Empty Reward (Neg):', (((16 - empty) * -1)/16));
 	}else if( this.previousEmpty > 0 && this.previousEmpty <= empty ){
 		reward = empty / 16; // Positive reward based on number of empty squares
+		console.log('Empty Reward (Pos):', (empty/16));
 	}
         
 	this.previousEmpty = empty;
@@ -119,6 +122,7 @@ AI.prototype.reward = function(meta) {
 	
 	if( this.getMaxVal() > this.previousMax ) {
 		reward += 1;
+		console.log('Max Value Change Reward: ', 1);
 	}
 	
 	this.previousMax = this.getMaxVal();
@@ -129,6 +133,9 @@ AI.prototype.reward = function(meta) {
 	}
 
 	reward += (meta.score - meta.previous) / 2048;
+	
+	console.log( 'Score Reward: ', ((meta.score - meta.previous) / 2048) );
+	
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
 	
