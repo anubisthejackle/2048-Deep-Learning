@@ -16,6 +16,7 @@ function AI() {
 	this.previousMoved = false;
 	this.moved = false;
 	this.previousEmpty = 0;
+	this.previousMax = 0;
 }
 
 AI.prototype.getMaxVal = function() {
@@ -117,6 +118,12 @@ AI.prototype.reward = function(meta) {
 	this.previousEmpty = empty;
 	
 	reward += this.getMaxVal() / 2048;
+	
+	if( this.getMaxVal() > this.previousMax ) {
+		reward += 1;
+	}
+	
+	this.previousMax = this.getMaxVal();
 	
 	if( this.moved == false ){
 	//	reward = reward * -1;
