@@ -1,6 +1,5 @@
 function AI() {
 	
-	var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(13,4, {
 		epsilon_test_time: 0.05,
@@ -8,9 +7,9 @@ function AI() {
 		experience_size: 30000,
 		temporal_window: 1000,
 		start_learn_threshold: 1000,
-		learnings_steps_burnin: 3000,
+		learnings_steps_burnin: 30000,
 		gama: 0.7,
-		tdtrainer_options: {method: 'adadelta', learning_rate:0.0001, momentum:0.9, batch_size:1, l2_decay:0.01}
+		tdtrainer_options: {method: 'adadelta', learning_rate:0.0001, momentum:0.9, batch_size:1}
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
