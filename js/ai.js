@@ -133,6 +133,8 @@ AI.prototype.reward = function(meta) {
 	reward += (meta.score - meta.previous) / 2048;
 	this.brain.backward( reward );
 	this.brain.visSelf(document.getElementById('brainInfo'));
+	
+	console.log( "Reward: ", reward );
 
 }
 
