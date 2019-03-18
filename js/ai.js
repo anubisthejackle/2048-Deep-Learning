@@ -6,7 +6,7 @@ function AI() {
 		epsilon_min: 0.0001,
 		experience_size: 30000,
 		temporal_window: 1000,
-		start_learn_threshold: 1000,
+		start_learn_threshold: 30,
 		learnings_steps_burnin: 30000,
 		gama: 0.7,
 		tdtrainer_options: {method: 'adadelta', learning_rate:0.0001, momentum:0.9, batch_size:1}
