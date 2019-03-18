@@ -101,7 +101,7 @@ AI.prototype.setMoved = function(moved){
 }
 
 AI.prototype.reward = function(meta) {
-
+	var reward = 0;
 	if( this.over && !this.won ){
 		this.brain.backward( -1 );
 		console.log('Failure Reward:', -1);
