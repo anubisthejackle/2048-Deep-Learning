@@ -31,6 +31,10 @@ AI.prototype.getMaxVal = function() {
 		StateManager.maxVal = max;
 	}
 	
+	if( StateManager.gameMaxVal < max ) {
+		this.doReward();	
+	}
+	
 	document.getElementById('max-value').innerHTML = 'Session-wide Max tile Value is: ' + StateManager.maxVal + '<br />Current Game Max tile Value is: ' + max;
 	
 	return max;
@@ -103,7 +107,7 @@ AI.prototype.setOver = function( over ) {
 	this.over = over;	
 }
 
-AI.prototype.doReward = function( won ) {
+AI.prototype.doReward = function() {
 	
 	this.brain.backward( ( this.getMaxVal() / 2048 ) );
 	this.brain.visSelf( document.getElementById('brainInfo') );
