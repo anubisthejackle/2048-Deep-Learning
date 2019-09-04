@@ -223,7 +223,7 @@ GameManager.prototype.move = function(direction) {
   if (!this.grid.movesAvailable()) {
 	//this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
 	//jQuery('#scoreHistory').html('<pre>' + JSON.stringify(this.history, null, 2) + '</pre>');
-	this.ai.setOver = true; // Game over!
+	this.ai.doReward( result.won );
 	this.over = true;
   }
 
@@ -239,14 +239,14 @@ GameManager.prototype.run = function() {
 		moved: ( ( StateManager.previousMove ) ? StateManager.previousMove.moved : false ),
 		timesMoved: this.timesMoved
 	});
-	this.ai.reward({
+	/*this.ai.reward({
 			score: this.score,
 			previous: this.previousScore,
 			won: this.won,
 			over: this.over,
 			timesMoved: this.timesMoved,
 			empty: this.ai.getEmptyCount()
-		});
+		});*/
 	this.previousScore = this.score;
 	StateManager.previousMove = this.move(best.move);
 	this.timesMoved++;
