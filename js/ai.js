@@ -107,6 +107,10 @@ AI.prototype.reward = function(meta) {
 		return;
 	}
 	
+	console.log( 'Over: ', this.over );
+	console.log( 'Brain: ', this.brain );
+	console.log( 'VisSelf: ', this.brain.visSelf );
+	
 	/**
 	 * We provide a reward that is relative between 0 and 1 based on how closely
 	 * the largest tile is to 2048.
