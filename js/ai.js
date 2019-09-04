@@ -101,15 +101,17 @@ AI.prototype.setMoved = function(moved){
 
 AI.prototype.reward = function(meta) {
 	var reward = 0;
-		
+
+	console.log( meta );
+	console.log( 'Brain: ', this.brain );
+	console.log( 'VisSelf: ', this.brain.visSelf );
+	
 	if( !meta.over ) {
 		// If we are not done the game, we do not reward yet.
 		return;
 	}
 	
-	console.log( 'Over: ', meta.over );
-	console.log( 'Brain: ', this.brain );
-	console.log( 'VisSelf: ', this.brain.visSelf );
+
 	
 	/**
 	 * We provide a reward that is relative between 0 and 1 based on how closely
