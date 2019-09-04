@@ -3,13 +3,13 @@ function AI() {
 	this.moves = [0,1,2,3];
 	this.brain = new deepqlearn.Brain(13,4, {
 		epsilon_test_time: 0.05,
-		epsilon_min: 0.0001,
+		epsilon_min: 0.001,
 		experience_size: 30000,
 		temporal_window: 1000,
-		start_learn_threshold: 30,
+		start_learn_threshold: 1,
 		learnings_steps_burnin: 30000,
 		gama: 0.7,
-		tdtrainer_options: {method: 'adadelta', learning_rate:0.0001, momentum:0.9, batch_size:1}
+		tdtrainer_options: {method: 'adadelta', learning_rate:0.01, momentum:0.9, batch_size:1}
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
