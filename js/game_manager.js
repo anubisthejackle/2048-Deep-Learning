@@ -224,6 +224,7 @@ GameManager.prototype.move = function(direction) {
 	//this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
 	//jQuery('#scoreHistory').html('<pre>' + JSON.stringify(this.history, null, 2) + '</pre>');
 	this.ai.setOver = true; // Game over!
+	this.over = true;
   }
 
   this.actuate();
