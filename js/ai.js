@@ -43,7 +43,7 @@ AI.prototype.getMaxVal = function() {
 
 }
 
-AI.prototype.getAverageVal( normalize ) {
+AI.prototype.getAverageVal = function( normalize ) {
 	
 	var sum = 0;
 	this.grid.cells.forEach(function(row){
