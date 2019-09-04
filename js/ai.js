@@ -132,6 +132,7 @@ AI.prototype.setOver = function( over ) {
 
 AI.prototype.doReward = function() {
 	
+	this.brain.backward( ( this.getMaxVal() / 2048 ) );
 	this.brain.backward( this.getAverageVal( true ) );
 	this.brain.visSelf( document.getElementById('brainInfo') );
 			   
