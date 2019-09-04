@@ -1,6 +1,7 @@
 var StateManager = {
 	previousMove: false,
 	maxVal: 0,
+	gameMaxVal: 0,
 	scores: [],
 	lowestScore: false,
 	medianScore: false,
