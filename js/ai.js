@@ -42,6 +42,25 @@ AI.prototype.getMaxVal = function() {
 
 }
 
+AI.prototype.getAverageVal( normalize ) {
+	
+	var sum = 0;
+	this.grid.cells.forEach(function(row){
+		row.forEach( function( curVal ){
+			sum += curVal.value;
+		});
+	});
+	
+	average = sum / 16;
+	
+	if( normalize ) {
+		average = average / 2048;	
+	}
+	
+	return average;
+	
+}
+
 AI.prototype.getEmptyCount = function() {
 
 	var count = 0;
@@ -110,7 +129,7 @@ AI.prototype.setOver = function( over ) {
 
 AI.prototype.doReward = function() {
 	
-	this.brain.backward( ( this.getMaxVal() / 2048 ) );
+	this.brain.backward( this.getAverageVal( true ) );
 	this.brain.visSelf( document.getElementById('brainInfo') );
 			   
 }
