@@ -48,7 +48,9 @@ AI.prototype.getAverageVal = function( normalize ) {
 	var sum = 0;
 	this.grid.cells.forEach(function(row){
 		row.forEach( function( curVal ){
-			sum += curVal.value;
+			if( curVal ) {
+				sum += curVal.value;
+			}
 		});
 	});
 	
