@@ -103,6 +103,18 @@ AI.prototype.setOver = function( over ) {
 	this.over = over;	
 }
 
+AI.prototype.doReward = function( won ) {
+	
+	var reward = -1;
+	if( won ) {
+		reward = ( this.getMaxVal() / 2048 );
+	}
+	
+	this.brain.backward( reward );
+	this.brain.visSelf( document.getElementById('brainInfo');
+			   
+}
+
 AI.prototype.reward = function(meta) {
 	var reward = 0;
 
