@@ -102,6 +102,8 @@ AI.prototype.setMoved = function(moved){
 AI.prototype.reward = function(meta) {
 	var reward = 0;
 	
+	console.log( meta );
+	
 	if( !this.over ) {
 		// If we are not done the game, we do not reward yet.
 		return;
