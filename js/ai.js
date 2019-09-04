@@ -104,12 +104,12 @@ AI.prototype.reward = function(meta) {
 	
 	console.log( meta );
 	
-	if( !this.over ) {
+	if( !meta.over ) {
 		// If we are not done the game, we do not reward yet.
 		return;
 	}
 	
-	console.log( 'Over: ', this.over );
+	console.log( 'Over: ', meta.over );
 	console.log( 'Brain: ', this.brain );
 	console.log( 'VisSelf: ', this.brain.visSelf );
 	
