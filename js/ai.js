@@ -110,7 +110,7 @@ AI.prototype.reward = function(meta) {
 	console.log( 'Brain: ', this.brain );
 	console.log( 'VisSelf: ', this.brain.visSelf );
 	
-	if( !meta.over ) {
+	if( !this.over ) {
 		// If we are not done the game, we do not reward yet.
 		return;
 	}
@@ -123,7 +123,7 @@ AI.prototype.reward = function(meta) {
 	 */
 	this.brain.backward( ( this.getMaxVal() / 2048 ) );
 	this.brain.visSelf(document.getElementById('brainInfo'));
-	
+	this.over = false;
 	return;
 	
 	/**
