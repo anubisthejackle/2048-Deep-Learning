@@ -29,6 +29,7 @@ AI.prototype.getMaxVal = function() {
 
 	if( StateManager.maxVal < max ){
 		StateManager.maxVal = max;
+		this.doReward();
 	}
 	
 	if( StateManager.gameMaxVal < max ) {
