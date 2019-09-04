@@ -225,6 +225,7 @@ GameManager.prototype.move = function(direction) {
 	//this.history.push({ ending: this.score, moves: (this.timesMoved+1)});
 	//jQuery('#scoreHistory').html('<pre>' + JSON.stringify(this.history, null, 2) + '</pre>');
 	this.ai.doReward( result.won );
+	StateManager.gameMaxVal = 0;
 	this.over = true;
   }
 
