@@ -99,6 +99,10 @@ AI.prototype.setMoved = function(moved){
 	this.previousMoved = moved;
 }
 
+AI.prototype.setOver = function( over ) {
+	this.over = over;	
+}
+
 AI.prototype.reward = function(meta) {
 	var reward = 0;
 
