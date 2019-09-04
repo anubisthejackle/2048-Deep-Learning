@@ -111,7 +111,7 @@ AI.prototype.doReward = function( won ) {
 	}
 	
 	this.brain.backward( reward );
-	this.brain.visSelf( document.getElementById('brainInfo');
+	this.brain.visSelf( document.getElementById('brainInfo') );
 			   
 }
 
