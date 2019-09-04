@@ -101,6 +101,24 @@ AI.prototype.setMoved = function(moved){
 
 AI.prototype.reward = function(meta) {
 	var reward = 0;
+	
+	if( !this.over ) {
+		// If we are not done the game, we do not reward yet.
+		return;
+	}
+	
+	/**
+	 * We provide a reward that is relative between 0 and 1 based on how closely
+	 * the largest tile is to 2048.
+	 */
+	this.brain.backward( ( this.getMaxVal() / 2048 ) );
+	this.brain.visSelf(document.getElementById('brainInfo'));
+	
+	return;
+	
+	/**
+	  IGNORE ALL BEYOND THIS POINT
+	  **/
 	if( this.over && !this.won ){
 		this.brain.backward( -1 );
 		console.log('Failure Reward:', -1);
