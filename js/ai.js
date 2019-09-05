@@ -21,11 +21,13 @@ function AI() {
 AI.prototype.toggleLearning = function() {
 
 	if( this.brain.learning ) {
+		console.log( 'Learning turned off' );
 		this.brain.epsilon_test_time = 0.0; // don't make any random choices, ever
 		this.brain.learning = false;
 		return;
 	}
 	
+	console.log('Learning turned on');
 	this.brain.epsilon_test_time = 0.05; // don't make any random choices, ever
 	this.brain.learning = true;
 	
