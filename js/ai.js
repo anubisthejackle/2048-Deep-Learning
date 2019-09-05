@@ -103,7 +103,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 		row.forEach( function( curVal ) {
 			
 			if( curVal ){
-				inputs.push( curVal.value / 2048 );
+				inputs.push( curVal.value / max );
 			}else{
 				inputs.push(0);
 			}
