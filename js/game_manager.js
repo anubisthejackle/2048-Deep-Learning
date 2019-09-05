@@ -214,7 +214,7 @@ GameManager.prototype.logResults = function() {
 	//document.getElementById('savestate').value=str;
 	
 	if( !this.win ){
-		if( this.ai ) {
+		if( this.ai && StateManager.gamesPlayed > 50 ) {
 			console.log('Toggle learning?');
 			this.ai.toggleLearning();	
 		}
