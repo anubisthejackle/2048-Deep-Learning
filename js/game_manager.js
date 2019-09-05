@@ -102,7 +102,7 @@ function GameManager(size, InputManager, Actuator) {
       this.run()
       this.actuator.setRunButton('Stop');
         try{
-  		console.log('Initiate brain load');
+  		//console.log('Initiate brain load');
   	//	this.ai.brain = JSONfn.parse( document.getElementById('savestate').value );
   	}catch(err){ /* Do nothing */ console.log('Brain failed to load'); }
     }
@@ -213,12 +213,13 @@ GameManager.prototype.logResults = function() {
 	//document.getElementById('savestate').value=str;
 	
 	if( !this.win ){
+		if( this.ai ) {
+			console.log('Toggle learning?');
+			this.ai.toggleLearning();	
+		}
 		setTimeout( function() {
 
 			GM.actuator.restart();
-			if( this.ai ) {
-				this.ai.toggleLearning();	
-			}
 			GM.setup();
 			document.getElementById("run-button").click();
 			document.getElementById("run-button").click();
