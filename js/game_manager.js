@@ -3,6 +3,7 @@ var StateManager = {
 	maxVal: 0,
 	gameMaxVal: 0,
 	scores: [],
+	max: [],
 	lowestScore: false,
 	medianScore: false,
 	meanScore: false,
@@ -46,7 +47,7 @@ function getChartDataset(a,maxval) {
 }
 
 function updateChart() {
-	plot.setData([getChartDataset(StateManager.scores,50)]); //I thing 50 is enough.
+	plot.setData([getChartDataset(StateManager.max,50)]); //I thing 50 is enough.
 	plot.setupGrid();
 	plot.draw();
 }
@@ -155,6 +156,7 @@ GameManager.prototype.logResults = function() {
 	var GM = this;
 
 	StateManager.scores.push( this.score );
+	StateManager.max.push( this.ai.getMaxVal() );
 
 	if( StateManager.lowestScore === false || StateManager.lowestScore > this.score )
 		StateManager.lowestScore = this.score;
