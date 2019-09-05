@@ -1,7 +1,7 @@
 function AI() {
 	
 	this.moves = [0,1,2,3];
-	this.brain = new deepqlearn.Brain(19,4, {
+	this.brain = new deepqlearn.Brain(20,4, {
 		epsilon_test_time: 0.05,
 		epsilon_min: 0.001,
 		experience_size: 30000,
@@ -116,9 +116,12 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 		});
 	});
 	this.moved = moved;
+	
 	inputs.push( ( moved )                 ? 1                          : 0 );
 	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
 	inputs.push( timesMoved );
+	inputs.push( pMove.score );
+
 	/*inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
 	inputs.push( ( moved )                 ? 1                          : 0 );
 	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );*/
