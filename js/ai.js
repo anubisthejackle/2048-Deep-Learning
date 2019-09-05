@@ -98,6 +98,8 @@ AI.prototype.getEmptyCount = function() {
 AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 
 	console.log( 'Times Moved: ', timesMoved );
+	console.log( 'Moved? ', moved );
+	console.log( 'Previous Move: ', pMove );
 	
 	var inputs = [];
 
