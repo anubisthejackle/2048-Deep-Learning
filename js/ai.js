@@ -127,7 +127,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 
 AI.prototype.getBest = function(grid, meta) {
 	this.grid = grid;
-	var inputs = this.buildInputs( meta.score, meta.moved );
+	var inputs = this.buildInputs( meta.score, meta.moved, meta.timesMoved );
 	var action = this.brain.forward( inputs );
 	
 	var move = {
