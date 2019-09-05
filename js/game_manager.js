@@ -23,7 +23,8 @@ var plot = $.plot(chart, [[0, 1]], {
 	},
 	yaxis: {
 		tickDecimals: 0
-	}
+	},
+	legend: { position: "nw" }
 });
 
 chart.append("<div style='position:absolute;top:12px;right:13px' id='highest-score'></div>");
