@@ -143,8 +143,6 @@ AI.prototype.getBest = function(grid, meta) {
 	var inputs = this.buildInputs( meta.score, meta.moved, meta.timesMoved, meta.pMove );
 	var action = this.brain.forward( inputs );
 	
-	console.log( 'Action: ', action );
-	
 	var move = {
 		move: this.moves[action]
 	};
