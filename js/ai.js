@@ -1,6 +1,7 @@
 function AI() {
 	
 	this.moves = [0,1,2,3];
+	this.badMoves = 0;
 	this.brain = new deepqlearn.Brain(20,4, {
 		epsilon_test_time: 0.05,
 		epsilon_min: 0.001,
@@ -102,8 +103,11 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 	console.log( 'Previous Move: ', pMove );
 	
 	if( pMove.moved == false ) {
-		this.brain.backward( -1 );
-		this.brain.visSelf( document.getElementById('brainInfo') );
+		this.badMoves++;
+	}
+
+	if( !this.brain.learning && this.badMoves > 500 ){
+		this.toggleLearning();	
 	}
 	
 	var inputs = [];
