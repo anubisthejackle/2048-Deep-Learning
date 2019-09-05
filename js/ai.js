@@ -97,6 +97,8 @@ AI.prototype.getEmptyCount = function() {
 
 AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 
+	console.log( 'Times Moved: ', timesMoved );
+	
 	var inputs = [];
 
 	var max = this.getMaxVal();
