@@ -263,7 +263,8 @@ GameManager.prototype.run = function() {
 	var best = this.ai.getBest(this.grid, {
 		score: this.score,
 		moved: ( ( StateManager.previousMove ) ? StateManager.previousMove.moved : false ),
-		timesMoved: this.timesMoved
+		timesMoved: this.timesMoved,
+		pMove: StateManager.previousMove
 	});
 	/*this.ai.reward({
 			score: this.score,
