@@ -4,13 +4,13 @@ function AI() {
 	this.badMoves = 0;
 	this.brain = new deepqlearn.Brain(20,4, {
 		epsilon_test_time: 0.05,
-		epsilon_min: 0.001,
+		epsilon_min: 0.01,
 		experience_size: 30000,
 		temporal_window: 1000,
 		start_learn_threshold: 1,
 		learnings_steps_burnin: 30000,
-		gama: 0.7,
-		tdtrainer_options: {method: 'adadelta', learning_rate:0.01, momentum:0.9, batch_size:1}
+		gama: 0.5,
+		tdtrainer_options: {method: 'adadelta', learning_rate:0.1, momentum:0.09, batch_size:10}
 	});
 	this.previousMove = 0;	
 	this.previousMoved = false;
