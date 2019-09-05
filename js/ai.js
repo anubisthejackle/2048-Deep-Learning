@@ -101,6 +101,11 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 	console.log( 'Moved? ', moved );
 	console.log( 'Previous Move: ', pMove );
 	
+	if( pMove.moved == false ) {
+		this.brain.backward( -1 );
+		this.brain.visSelf( document.getElementById('brainInfo') );
+	}
+	
 	var inputs = [];
 
 	var max = this.getMaxVal();
