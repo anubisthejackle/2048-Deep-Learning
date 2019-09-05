@@ -21,6 +21,8 @@ function AI() {
 
 AI.prototype.toggleLearning = function() {
 
+	this.badMoves = 0;
+	
 	if( this.brain.learning ) {
 		console.log( 'Learning turned off' );
 		this.brain.epsilon_test_time = 0.0; // don't make any random choices, ever
