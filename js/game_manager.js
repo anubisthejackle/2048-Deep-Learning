@@ -197,6 +197,9 @@ GameManager.prototype.logResults = function() {
 		setTimeout( function() {
 
 			GM.actuator.restart();
+			if( this.ai ) {
+				this.ai.toggleLearning();	
+			}
 			GM.setup();
 			document.getElementById("run-button").click();
 			document.getElementById("run-button").click();
