@@ -18,6 +18,19 @@ function AI() {
 	this.previousMax = 0;
 }
 
+AI.prototype.toggleLearning = function() {
+
+	if( this.brain.learning ) {
+		this.brain.epsilon_test_time = 0.0; // don't make any random choices, ever
+		this.brain.learning = false;
+		return;
+	}
+	
+	this.brain.epsilon_test_time = 0.05; // don't make any random choices, ever
+	this.brain.learning = true;
+	
+}
+
 AI.prototype.getMaxVal = function() {
 	var max = 0;
 	this.grid.cells.forEach(function(row){
