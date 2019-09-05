@@ -98,15 +98,14 @@ AI.prototype.getEmptyCount = function() {
 
 AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 
-	console.log( 'Times Moved: ', timesMoved );
-	console.log( 'Moved? ', moved );
-	console.log( 'Previous Move: ', pMove );
-	
 	if( pMove.moved == false ) {
 		this.badMoves++;
+		console.log( 'Bad Moves: ', this.badMoves );
 	}
 
 	if( !this.brain.learning && this.badMoves > 500 ){
+		this.badMoves = 0;
+		console.log("Resetting bad moves and turning on learning...");
 		this.toggleLearning();	
 	}
 	
