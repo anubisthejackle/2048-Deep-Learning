@@ -105,7 +105,7 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 		console.log( 'Bad Moves: ', this.badMoves );
 	}
 
-	if( !this.brain.learning && this.badMoves > 500 ){
+	if( !this.brain.learning && this.badMoves > 100 ){
 		this.badMoves = 0;
 		console.log("Resetting bad moves and turning on learning...");
 		this.toggleLearning();	
