@@ -16,7 +16,7 @@ var chart = $("#chart");
 var plot = $.plot(chart, [[0, 1]], {
 	series: {
 		shadowSize: 0,	// Drawing is faster without shadows
-		color: "rgb(246, 94, 59)",
+		//color: "rgb(246, 94, 59)",
 	},
 	xaxis: {
 		show: true
