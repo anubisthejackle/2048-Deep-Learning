@@ -100,7 +100,7 @@ AI.prototype.getEmptyCount = function() {
 
 AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 
-	if( pMove.moved == false ) {
+	if( !this.brain.learning && pMove.moved == false ) {
 		this.badMoves++;
 		console.log( 'Bad Moves: ', this.badMoves );
 	}
