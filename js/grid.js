@@ -202,7 +202,7 @@ Grid.prototype.move = function (direction) {
           tile.updatePosition(positions.next);
 
           // Update the score
-          score += (merged.value*5/moves); 
+          score += merged.value; 
 
           // The mighty 2048 tile
           if (merged.value === 2048) {

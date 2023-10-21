@@ -74,6 +74,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
       // actions must check out. This is not very pretty Object Oriented programming but I can't see
       // a way out of it :(
       layer_defs = opt.layer_defs;
+      console.log(layer_defs[layer_defs.length-1].num_neurons);
       if(layer_defs.length < 2) { console.log('TROUBLE! must have at least 2 layers'); }
       if(layer_defs[0].type !== 'input') { console.log('TROUBLE! first layer must be input layer!'); }
       if(layer_defs[layer_defs.length-1].type !== 'regression') { console.log('TROUBLE! last layer must be input regression!'); }
@@ -81,7 +82,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
         console.log('TROUBLE! Number of inputs must be num_states * temporal_window + num_actions * temporal_window + num_states!');
       }
       if(layer_defs[layer_defs.length-1].num_neurons !== this.num_actions) {
-        console.log('TROUBLE! Number of regression neurons should be num_actions!');
+        console.log(`TROUBLE! Number of regression neurons should be num_actions (${this.num_actions}) but found ${layer_defs[layer_defs.length-1].num_neurons}!`);
       }
     } else {
       // create a very simple neural net by default
@@ -119,6 +120,12 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
     this.learning = true;
   }
   Brain.prototype = {
+    save: function() {
+        return this.value_net.toJSON();
+    },
+    load: function(json) {
+        this.value_net.fromJSON(json);
+    },
     random_action: function() {
       // a bit of a helper function. It returns a random action
       // we are abstracting this away because in future we may want to 
@@ -254,7 +261,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
           var loss = this.tdtrainer.train(x, ystruct);
           avcost += loss.loss;
         }
-        avcost = avcost/this.tdtrainer.batch_size;
+        avcost = Math.round( (avcost/this.tdtrainer.batch_size) * 1000000 ) / 1000000;
         this.average_loss_window.add(avcost);
       }
     },

@@ -1,13 +1,70 @@
 function AI() {
 
 	this.moves = [0,1,2,3];
-	this.brain = new deepqlearn.Brain(19,4, {
-		epsilon_test_time: 0.0,
-		epsilon_min: 0.01,
-		experience_size: 3000000
-	});
-	this.previousMove = 0;	
+    this.brain = this.newBrain();
+
+    this.previousGrid = null;
+	this.previousMove = 0;
+    this.previousMax = 0;
 	this.previousMoved = false;
+    
+    this.grid = null;
+    this.maxValue = 0;
+}
+
+AI.prototype.newBrain = function() {
+    var inputs = this.buildInputs().length;
+    var actions = 4;
+    var temporal_window = 1;
+    var network_size = inputs * temporal_window + actions * temporal_window + inputs;
+
+    return new deepqlearn.Brain(
+        inputs, 
+        actions, 
+        {
+            temporal_window: temporal_window,
+            layer_defs: [
+                {
+                    type: 'input',
+                    out_depth: network_size,
+                    out_sx: 1,
+                    out_sy: 1
+                },
+                {
+                    type: 'fc',
+                    num_neurons: 50,
+                    activation: 'relu'
+                },
+                {
+                    type: 'fc',
+                    num_neurons: 50,
+                    activation: 'relu'
+                },
+                {
+                    type: 'regression',
+                    num_neurons: actions,
+                }
+            ]
+        }
+    );
+}
+    
+AI.prototype.load = function(json) {
+    this.brain = this.newBrain();
+        
+    this.brain.load(json);
+    this.brain.visSelf(document.getElementById('brainInfo'));
+}
+
+AI.prototype.reset = function() {
+    // console.log('RESETING AI GAME STATE MEMORY');
+    this.previousGrid = null;
+	this.previousMove = 0;
+    this.previousMax = 0;
+	this.previousMoved = false;
+    
+    this.grid = null;
+    this.maxValue = 0;
 }
 
 AI.prototype.getMaxVal = function() {
@@ -43,34 +100,51 @@ AI.prototype.getEmptyCount = function() {
 
 }
 
-AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
+AI.prototype.buildInputs = function(score) {
 
 	var inputs = [];
 
-	var max = this.getMaxVal();
+    this.previousMax = this.maxValue;
+	this.maxValue = this.getMaxVal();
+
+    // if ( this.previousGrid === null ) {
+    //     for(i=0;i<16;i++){
+    //         inputs.push(0);
+    //     }
+    // }else{
+    //     this.previousGrid.cells.forEach(function(row, index) {
+    //         row.forEach( function( curVal ) {
+                
+    //             if( curVal ){
+    //                 inputs.push( curVal.value );
+    //             }else{
+    //                 inputs.push(0);
+    //             }
+    //         });
+    //     });
+    // }
 
 	this.grid.cells.forEach(function(row, index) {
 		row.forEach( function( curVal ) {
 			
 			if( curVal ){
-				inputs.push( ( 1 + ( -1 / curVal.value ) ) );
+				inputs.push( curVal.value );
 			}else{
 				inputs.push(0);
 			}
 		});
 	});
 
-	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
-	inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
-	inputs.push( ( moved )                 ? 1                          : 0 );
-	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );
+    inputs.push(score);
 
-//	console.log('Inputs: ', inputs);
 	return inputs;
-
 }
 
 AI.prototype.getBest = function(grid, meta) {
+    if ( this.grid !== null ) {
+        this.previousGrid = jQuery.extend(true, {}, this.grid);
+    }
+
 	this.grid = grid;
 	var inputs = this.buildInputs( meta.score, meta.moved );
 	var action = this.brain.forward( inputs );
@@ -91,49 +165,72 @@ AI.prototype.setMoved = function(moved){
 
 AI.prototype.reward = function(meta) {
 
-	var max = this.getMaxVal();	
-	if( meta.over && meta.won ){
+    var reward = 0;
 
-		reward = 1;
-
-	}else if( meta.score != meta.previous ) {
-
-		reward  = ( 1 + (-1 / ( meta.score - meta.previous ) ) );
-	//	reward += ( ( meta.empty > 0 ) ? ( meta.empty / 16 ) : 0 );
-	//	reward /= 4;
-
-	}else{
-
-	//	reward = -(0.5);
-		reward = 0;
+	/*
+     * The theoretical maximum delta of a score change is all 16 squares on the board going from
+     * 1024 to 2048 at the same time. This would create 8 squares of 2048. The score delta would
+     * then be 2048 * 8 or 16,384. This is because the score of a single move is the sum of all
+     * merged square values.
+     * 
+     * The theoretical minimum delta score, in that case, is 4.
+     * 
+     * Our normalization function is (value - min) / (max - min)
+     */
+    if( meta.score != meta.previous ) {
+		var delta = Math.max(meta.score, meta.previous) - Math.min(meta.score, meta.previous);
+        var normalizedDelta = (delta - 4) / (16384 - 4);
+        // console.log(`Score Reward: ${normalizedDelta}`);
+        // reward += normalizedDelta;
+        this.brain.backward( roundToFourDecimal( normalizedDelta ) );
 	}
 
-	//if( meta.over && !meta.won ){
-//		console.log('Inverting Reward due to Loss');
-	//	reward *= -1;
-	//}
-//	console.log('Reward: ', reward );
-	this.brain.backward( reward );
-//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 50 ){
-		this.brain.visSelf(document.getElementById('brainInfo'));
-//	}
+    if ( this.maxValue > this.previousMax ) {
+        var valueReward = (this.maxValue - 2) / (2048 - 2);
+        // console.log(`Value Reward: ${valueReward}`);
+        // reward += valueReward;
+        this.brain.backward( roundToFourDecimal( valueReward ) );
+    }
 
+    // Major reward for winning.
+    if ( meta.won ) {
+        // reward = reward * 2;
+        this.brain.backward(1);
+    }
+
+    if ( meta.over && ! meta.won ) {
+        // reward = -1 * (2048 - this.maxValue) / (2048 - 2);
+        // this.brain.backward(-1 * (2048 - this.maxValue) / (2048 - 2));
+        // console.log(`Game Lose Reward: ${reward}`);
+    }
+
+    // If we have a reward, then train.
+    // if ( reward != 0 ) {
+        // console.log(`Total Reward: ${reward}`);
+        // this.brain.backward( reward );
+    // }
+
+    this.brain.visSelf(document.getElementById('brainInfo'));
+}
+
+function roundToFourDecimal( val ) {
+    return Math.round( ( val + Number.EPSILON ) * 1000 ) / 1000 
 }
 
 AI.prototype.rewardMultiple = function(meta){
 
-	var max = this.getMaxVal();
-	var scoreReward = ( 1 + (-1 / (meta.score - meta.previous ) ) );
-	var maxReward = ( 1 + ( ( -1 * max ) / meta.score ) );
-	var movesReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0);
-	var emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
+// 	var max = this.getMaxVal();
+// 	var scoreReward = ( 1 + (-1 / (meta.score - meta.previous ) ) );
+// 	var maxReward = ( 1 + ( ( -1 * max ) / meta.score ) );
+// 	var movesReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0);
+// 	var emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
 
-	this.brain.backward( scoreReward );
-	this.brain.backward( maxReward );
-	this.brain.backward( movesReward );
-	this.brain.backward( emptyReward );
-//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
-		this.brain.visSelf(document.getElementById('brainInfo'));
-//	}
+// 	this.brain.backward( scoreReward );
+// 	this.brain.backward( maxReward );
+// 	this.brain.backward( movesReward );
+// 	this.brain.backward( emptyReward );
+// //	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
+// 		this.brain.visSelf(document.getElementById('brainInfo'));
+// //	}
 
 }

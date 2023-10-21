@@ -78,21 +78,36 @@ function GameManager(size, InputManager, Actuator) {
     this.actuator.showHint(best.move);
   }.bind(this));
 
-
   this.inputManager.on('run', function() {
     if (this.running) {
       this.running = false;
       this.actuator.setRunButton('Auto-run');
     } else {
-      this.running = true;
-      this.run()
-      this.actuator.setRunButton('Stop');
-        try{
-  		console.log('Initiate brain load');
-  	//	this.ai.brain = JSONfn.parse( document.getElementById('savestate').value );
-  	}catch(err){ /* Do nothing */ console.log('Brain failed to load'); }
+        this.running = true;
+        this.run()
+        this.actuator.setRunButton('Stop');
+
     }
   }.bind(this));
+
+  this.inputManager.on('load-brain', function() {
+    // Disable run if we're loading a brain.
+    if ( this.running ) {
+        this.running = false;
+        this.actuator.setRunButton('Auto-run');
+    }
+
+    try{
+        console.log('Initiate brain load');
+        this.ai = this.ai || new AI();
+        this.ai.load(JSON.parse(document.getElementById('savestate').value));
+    }catch(err){ 
+        /* Do nothing */
+        console.log('Brain failed to load');
+        console.log(err);
+    }
+
+  });
 
   this.setup();
 }
@@ -114,6 +129,7 @@ GameManager.prototype.setup = function () {
   	this.ai = new AI();
   }else{
   	this.ai = this.ai;
+    this.ai.reset();
   }
   
   this.score        = 0;
@@ -163,7 +179,7 @@ GameManager.prototype.logResults = function() {
 			sum += StateManager.scores[ score ];
 
 		}
-		console.log( sum );
+		// console.log( sum );
 		StateManager.meanScore = sum / StateManager.scores.length;
 		StateManager.gamesPlayed = StateManager.scores.length;
 
@@ -179,8 +195,7 @@ GameManager.prototype.logResults = function() {
 	document.getElementById('games-played').innerHTML='Games Played: ' + ~~StateManager.gamesPlayed;
 
 	// the entire object is now simply string. You can save this somewhere
-	//var str = JSONfn.stringify(this.ai.brain);
-	//document.getElementById('savestate').value=str;
+	document.getElementById('savestate').value=JSON.stringify(this.ai.brain.save());
 	
 	if( !this.win ){
 		setTimeout( function() {
@@ -237,6 +252,7 @@ GameManager.prototype.run = function() {
 			won: this.won,
 			over: this.over,
 			timesMoved: this.timesMoved,
+            maxScore: StateManager.highestScore || 0,
 			empty: this.ai.getEmptyCount()
 		});
   var timeout = animationDelay;
