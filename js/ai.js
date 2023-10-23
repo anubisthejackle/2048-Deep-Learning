@@ -13,7 +13,7 @@ function AI() {
 }
 
 AI.prototype.newBrain = function() {
-    var inputs = this.buildInputs().length;
+    var inputs = 16+16+1;
     var actions = 4;
     var temporal_window = 1;
     var network_size = inputs * temporal_window + actions * temporal_window + inputs;
@@ -22,6 +22,8 @@ AI.prototype.newBrain = function() {
         inputs, 
         actions, 
         {
+            learning_steps_total: 10000,
+            learning_steps_burnin: 300,
             temporal_window: temporal_window,
             layer_defs: [
                 {
@@ -107,22 +109,22 @@ AI.prototype.buildInputs = function(score) {
     this.previousMax = this.maxValue;
 	this.maxValue = this.getMaxVal();
 
-    // if ( this.previousGrid === null ) {
-    //     for(i=0;i<16;i++){
-    //         inputs.push(0);
-    //     }
-    // }else{
-    //     this.previousGrid.cells.forEach(function(row, index) {
-    //         row.forEach( function( curVal ) {
+    if ( this.previousGrid === null ) {
+        for(i=0;i<16;i++){
+            inputs.push(0);
+        }
+    }else{
+        this.previousGrid.cells.forEach(function(row, index) {
+            row.forEach( function( curVal ) {
                 
-    //             if( curVal ){
-    //                 inputs.push( curVal.value );
-    //             }else{
-    //                 inputs.push(0);
-    //             }
-    //         });
-    //     });
-    // }
+                if( curVal ){
+                    inputs.push( curVal.value );
+                }else{
+                    inputs.push(0);
+                }
+            });
+        });
+    }
 
 	this.grid.cells.forEach(function(row, index) {
 		row.forEach( function( curVal ) {
@@ -177,19 +179,20 @@ AI.prototype.reward = function(meta) {
      * 
      * Our normalization function is (value - min) / (max - min)
      */
-    if( meta.score != meta.previous ) {
-		var delta = Math.max(meta.score, meta.previous) - Math.min(meta.score, meta.previous);
-        var normalizedDelta = (delta - 4) / (16384 - 4);
-        // console.log(`Score Reward: ${normalizedDelta}`);
-        // reward += normalizedDelta;
-        this.brain.backward( roundToFourDecimal( normalizedDelta ) );
-	}
+    // if( meta.score != meta.previous ) {
+	// 	var delta = Math.max(meta.score, meta.previous) - Math.min(meta.score, meta.previous);
+    //     var normalizedDelta = (delta - 4) / (16384 - 4);
+    //     // console.log(`Score Reward: ${normalizedDelta}`);
+    //     // reward += normalizedDelta;
+    //     // this.brain.backward( roundToFourDecimal( normalizedDelta ) );
+	// }
 
     if ( this.maxValue > this.previousMax ) {
-        var valueReward = (this.maxValue - 2) / (2048 - 2);
+        // var valueReward = (this.maxValue - 2) / (2048 - 2);
         // console.log(`Value Reward: ${valueReward}`);
         // reward += valueReward;
-        this.brain.backward( roundToFourDecimal( valueReward ) );
+        // this.brain.backward( roundToFourDecimal( valueReward ) );
+        this.brain.backward(1);
     }
 
     // Major reward for winning.
@@ -202,6 +205,7 @@ AI.prototype.reward = function(meta) {
         // reward = -1 * (2048 - this.maxValue) / (2048 - 2);
         // this.brain.backward(-1 * (2048 - this.maxValue) / (2048 - 2));
         // console.log(`Game Lose Reward: ${reward}`);
+        this.brain.backward(-1);
     }
 
     // If we have a reward, then train.
