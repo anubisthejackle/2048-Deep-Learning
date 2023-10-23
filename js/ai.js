@@ -167,52 +167,17 @@ AI.prototype.setMoved = function(moved){
 
 AI.prototype.reward = function(meta) {
 
-    var reward = 0;
-
-	/*
-     * The theoretical maximum delta of a score change is all 16 squares on the board going from
-     * 1024 to 2048 at the same time. This would create 8 squares of 2048. The score delta would
-     * then be 2048 * 8 or 16,384. This is because the score of a single move is the sum of all
-     * merged square values.
-     * 
-     * The theoretical minimum delta score, in that case, is 4.
-     * 
-     * Our normalization function is (value - min) / (max - min)
-     */
-    // if( meta.score != meta.previous ) {
-	// 	var delta = Math.max(meta.score, meta.previous) - Math.min(meta.score, meta.previous);
-    //     var normalizedDelta = (delta - 4) / (16384 - 4);
-    //     // console.log(`Score Reward: ${normalizedDelta}`);
-    //     // reward += normalizedDelta;
-    //     // this.brain.backward( roundToFourDecimal( normalizedDelta ) );
-	// }
-
-    if ( this.maxValue > this.previousMax ) {
-        // var valueReward = (this.maxValue - 2) / (2048 - 2);
-        // console.log(`Value Reward: ${valueReward}`);
-        // reward += valueReward;
-        // this.brain.backward( roundToFourDecimal( valueReward ) );
-        this.brain.backward(1);
-    }
-
     // Major reward for winning.
     if ( meta.won ) {
         // reward = reward * 2;
         this.brain.backward(1);
+        return;
+    } else if ( meta.over && ! meta.won ) {
+        this.brain.backward( roundToFourDecimal( -1 * (2048 - this.maxValue) / (2048 - 2) ) );
+    } else if ( this.maxValue > this.previousMax ) {
+        var valueReward = (this.maxValue - 2) / (2048 - 2);
+        this.brain.backward( roundToFourDecimal( valueReward ) );
     }
-
-    if ( meta.over && ! meta.won ) {
-        // reward = -1 * (2048 - this.maxValue) / (2048 - 2);
-        // this.brain.backward(-1 * (2048 - this.maxValue) / (2048 - 2));
-        // console.log(`Game Lose Reward: ${reward}`);
-        this.brain.backward(-1);
-    }
-
-    // If we have a reward, then train.
-    // if ( reward != 0 ) {
-        // console.log(`Total Reward: ${reward}`);
-        // this.brain.backward( reward );
-    // }
 
     this.brain.visSelf(document.getElementById('brainInfo'));
 }
