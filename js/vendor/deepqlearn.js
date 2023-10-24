@@ -18,6 +18,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
   // over time it receives some inputs and some rewards
   // and its job is to set the outputs to maximize the expected reward
   var Brain = function(num_states, num_actions, opt) {
+    // console.log('Making new brain');
     var opt = opt || {};
     // in number of time steps, of temporal memory
     // the ACTUAL input to the net will be (x,a) temporal_window times, and followed by current x
@@ -74,7 +75,6 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
       // actions must check out. This is not very pretty Object Oriented programming but I can't see
       // a way out of it :(
       layer_defs = opt.layer_defs;
-      console.log(layer_defs[layer_defs.length-1].num_neurons);
       if(layer_defs.length < 2) { console.log('TROUBLE! must have at least 2 layers'); }
       if(layer_defs[0].type !== 'input') { console.log('TROUBLE! first layer must be input layer!'); }
       if(layer_defs[layer_defs.length-1].type !== 'regression') { console.log('TROUBLE! last layer must be input regression!'); }
@@ -112,19 +112,24 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
     // various housekeeping variables
     this.age = 0; // incremented every backward()
     this.forward_passes = 0; // incremented every forward()
-    this.epsilon = 1.0; // controls exploration exploitation tradeoff. Should be annealed over time
+    this.epsilon = this.epsilon || 1.0; // controls exploration exploitation tradeoff. Should be annealed over time
+    this.epsilon_max = this.epsilon_max || 1.0;
     this.latest_reward = 0;
     this.last_input_array = [];
     this.average_reward_window = new cnnutil.Window(1000, 10);
     this.average_loss_window = new cnnutil.Window(1000, 10);
     this.learning = true;
+    // console.log(`Epsilon after new brain ${this.epsilon}`)
+
+    this.load = function(json) {
+      this.value_net.fromJSON(json);
+      this.epsilon_max = .9; // When loading a brain, don't force it to be random at all times.
+    }.bind(this);
   }
+
   Brain.prototype = {
     save: function() {
         return this.value_net.toJSON();
-    },
-    load: function(json) {
-        this.value_net.fromJSON(json);
     },
     random_action: function() {
       // a bit of a helper function. It returns a random action
@@ -187,15 +192,33 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
         var net_input = this.getNetInput(input_array);
         if(this.learning) {
           // compute epsilon for the epsilon-greedy policy
-          this.epsilon = Math.min(1.0, Math.max(this.epsilon_min, 1.0-(this.age - this.learning_steps_burnin)/(this.learning_steps_total - this.learning_steps_burnin))); 
+        //   console.log(`Epsilon in forward ${this.epsilon}`);
+        //   console.log(`Epsilon Min: ${this.epsilon_min}`);
+        //   console.log(`Epsilon Max: ${this.epsilon_max}`);
+        //   console.log(`Age: ${this.age}`);
+        //   console.log(`Learning Steps Burnin: ${this.learning_steps_burnin}`)
+        //   console.log(`Learning Steps Total: ${this.learning_steps_total}`)
+        //   console.log('1.0-(this.age - this.learning_steps_burnin)/(this.learning_steps_total - this.learning_steps_burnin)', 1.0-(this.age - this.learning_steps_burnin)/(this.learning_steps_total - this.learning_steps_burnin));
+          var calculated_epsilon = 1.0-(this.age - this.learning_steps_burnin)/(this.learning_steps_total - this.learning_steps_burnin);
+        //   console.log(`Calculated Epsilon: ${calculated_epsilon}`);
+    
+          var max_epsilon = Math.max(this.epsilon_min, calculated_epsilon);
+        //   console.log(`Max Epsilon: ${max_epsilon}`);
+
+          var normalized_epsilon = Math.min(this.epsilon_max, max_epsilon);
+        //   console.log(`Normalized Epsilon: ${normalized_epsilon}`);
+
+          this.epsilon = normalized_epsilon; 
         } else {
           this.epsilon = this.epsilon_test_time; // use test-time value
         }
         var rf = convnetjs.randf(0,1);
         if(rf < this.epsilon) {
           // choose a random action with epsilon probability
+        //   console.log('Making random action');
           action = this.random_action();
         } else {
+        //   console.log('Making calculated decision');
           // otherwise use our policy to make decision
           var maxact = this.policy(net_input);
           action = maxact.action;
@@ -285,7 +308,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
       elt.appendChild(brainvis);
     }
   }
-  
+
   global.Brain = Brain;
 })(deepqlearn);
 

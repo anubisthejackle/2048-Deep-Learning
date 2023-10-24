@@ -15,13 +15,14 @@ function AI() {
 AI.prototype.newBrain = function() {
     var inputs = 16+16+1;
     var actions = 4;
-    var temporal_window = 1;
+    var temporal_window = 10;
     var network_size = inputs * temporal_window + actions * temporal_window + inputs;
 
     return new deepqlearn.Brain(
         inputs, 
         actions, 
         {
+            epsilon_max: 0.8,
             learning_steps_total: 10000,
             learning_steps_burnin: 300,
             temporal_window: temporal_window,

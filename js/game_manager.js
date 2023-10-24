@@ -107,7 +107,7 @@ function GameManager(size, InputManager, Actuator) {
         console.log(err);
     }
 
-  });
+  }.bind(this));
 
   this.setup();
 }
@@ -126,6 +126,7 @@ GameManager.prototype.setup = function () {
   this.grid.addStartTiles();
 
   if( typeof this.ai == "undefined"){
+    console.log('Generating New AI');
   	this.ai = new AI();
   }else{
   	this.ai = this.ai;
