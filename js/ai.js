@@ -12,48 +12,52 @@ function AI() {
     this.maxValue = 0;
 }
 
-AI.prototype.newBrain = function() {
+AI.prototype.newBrain = function(opts) {
     var inputs = 16+16+1;
     var actions = 4;
     var temporal_window = 10;
     var network_size = inputs * temporal_window + actions * temporal_window + inputs;
 
+    var options = {
+        learning_steps_total: 10000,
+        learning_steps_burnin: 300,
+        temporal_window: temporal_window,
+        layer_defs: [
+            {
+                type: 'input',
+                out_depth: network_size,
+                out_sx: 1,
+                out_sy: 1
+            },
+            {
+                type: 'fc',
+                num_neurons: 50,
+                activation: 'relu'
+            },
+            {
+                type: 'fc',
+                num_neurons: 50,
+                activation: 'relu'
+            },
+            {
+                type: 'regression',
+                num_neurons: actions,
+            }
+        ],
+        ...opts // Allow overriding of default options.
+    };
+
     return new deepqlearn.Brain(
         inputs, 
         actions, 
-        {
-            epsilon_max: 0.8,
-            learning_steps_total: 10000,
-            learning_steps_burnin: 300,
-            temporal_window: temporal_window,
-            layer_defs: [
-                {
-                    type: 'input',
-                    out_depth: network_size,
-                    out_sx: 1,
-                    out_sy: 1
-                },
-                {
-                    type: 'fc',
-                    num_neurons: 50,
-                    activation: 'relu'
-                },
-                {
-                    type: 'fc',
-                    num_neurons: 50,
-                    activation: 'relu'
-                },
-                {
-                    type: 'regression',
-                    num_neurons: actions,
-                }
-            ]
-        }
+        options
     );
 }
     
 AI.prototype.load = function(json) {
-    this.brain = this.newBrain();
+    this.brain = this.newBrain({
+        epsilon_max: 0.75 // On brain load we don't want to randomize _every_ move.
+    });
         
     this.brain.load(json);
     this.brain.visSelf(document.getElementById('brainInfo'));

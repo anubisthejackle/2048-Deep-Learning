@@ -112,8 +112,8 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
     // various housekeeping variables
     this.age = 0; // incremented every backward()
     this.forward_passes = 0; // incremented every forward()
-    this.epsilon = this.epsilon || 1.0; // controls exploration exploitation tradeoff. Should be annealed over time
-    this.epsilon_max = this.epsilon_max || 1.0;
+    this.epsilon = 1.0; // controls exploration exploitation tradeoff. Should be annealed over time
+    this.epsilon_max = typeof opt.epsilon_max !== 'undefined' ? opt.epsilon_max : 1.0;
     this.latest_reward = 0;
     this.last_input_array = [];
     this.average_reward_window = new cnnutil.Window(1000, 10);
@@ -123,7 +123,6 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
 
     this.load = function(json) {
       this.value_net.fromJSON(json);
-      this.epsilon_max = .9; // When loading a brain, don't force it to be random at all times.
     }.bind(this);
   }
 
