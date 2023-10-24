@@ -219,8 +219,13 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
         } else {
         //   console.log('Making calculated decision');
           // otherwise use our policy to make decision
-          var maxact = this.policy(net_input);
-          action = maxact.action;
+          try {
+              var maxact = this.policy(net_input);
+              action = maxact.action;
+          } catch (e) {
+            // There isn't enough data in memory to generate a decision. Use a random action instead.
+            action = this.random_action();
+          }
        }
       } else {
         // pathological case that happens first few iterations 
