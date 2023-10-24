@@ -19,7 +19,7 @@ AI.prototype.newBrain = function(opts) {
     var network_size = inputs * temporal_window + actions * temporal_window + inputs;
 
     var options = {
-        epsilon_max: .99,
+        epsilon_max: .75,
         learning_steps_total: 10000,
         learning_steps_burnin: 300,
         temporal_window: temporal_window,
@@ -61,7 +61,7 @@ AI.prototype.newBrain = function(opts) {
     
 AI.prototype.load = function(json) {
     this.brain = this.newBrain({
-        epsilon_max: 0.75 // On brain load we don't want to randomize _every_ move.
+        epsilon_max: 0.5 // On brain load we don't want to randomize _every_ move.
     });
         
     this.brain.load(json);
