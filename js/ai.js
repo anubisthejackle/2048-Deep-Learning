@@ -19,6 +19,7 @@ AI.prototype.newBrain = function(opts) {
     var network_size = inputs * temporal_window + actions * temporal_window + inputs;
 
     var options = {
+        epsilon_max: .99,
         learning_steps_total: 10000,
         learning_steps_burnin: 300,
         temporal_window: temporal_window,
@@ -35,9 +36,13 @@ AI.prototype.newBrain = function(opts) {
                 activation: 'relu'
             },
             {
+                type: 'conv',
+                num_neurons: 50,
+            },
+            {
                 type: 'fc',
                 num_neurons: 50,
-                activation: 'relu'
+                activation: 'sigmoid'
             },
             {
                 type: 'regression',
