@@ -1,5 +1,4 @@
 function AI() {
-
 	this.moves = [0,1,2,3];
     this.brain = this.newBrain();
 
@@ -37,12 +36,15 @@ AI.prototype.newBrain = function(opts) {
             },
             {
                 type: 'conv',
-                num_neurons: 50,
+                sx: 5,
+                filters: 8,
+                stride: 1,
+                activation: 'relu'
             },
             {
                 type: 'fc',
                 num_neurons: 50,
-                activation: 'sigmoid'
+                activation: 'relu'
             },
             {
                 type: 'regression',
@@ -179,7 +181,6 @@ AI.prototype.reward = function(meta) {
 
     // Major reward for winning.
     if ( meta.won ) {
-        // reward = reward * 2;
         this.brain.backward(1);
         return;
     } else if ( meta.over && ! meta.won ) {
@@ -187,6 +188,13 @@ AI.prototype.reward = function(meta) {
     } else if ( this.maxValue > this.previousMax ) {
         var valueReward = (this.maxValue - 2) / (2048 - 2);
         this.brain.backward( roundToFourDecimal( valueReward ) );
+    } else if ( meta.score > meta.previous ) {
+        /*
+         * The hope of adding this reward is that, as a last ditch effort,
+         * the AI will _at least_ attempt to find moves that merge blocks.
+         * While prioritizing moves that bump the max value, and win the game.
+         */
+        this.brain.backward( 0.00045 ); // Reward for half the value of bumping the max value to 4.
     }
 
     this.brain.visSelf(document.getElementById('brainInfo'));
