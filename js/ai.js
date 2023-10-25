@@ -9,6 +9,10 @@ function AI() {
     
     this.grid = null;
     this.maxValue = 0;
+
+    document.addEventListener( 'toggle-learning', function() {
+        this.brain.toggle_learning();
+    }.bind(this));
 }
 
 AI.prototype.newBrain = function(opts) {
@@ -179,22 +183,34 @@ AI.prototype.setMoved = function(moved){
 
 AI.prototype.reward = function(meta) {
 
+    // 10-25-2023 -- When score changes, give a boost based on the number of empty spaces.
+
+    if ( meta.score > meta.previous ) {
+        var empty = this.getEmptyCount();
+
+        // There are 16 squares, so at most this could ever be 16 empty spaces, minus 1 for the highest square.
+        if ( empty > 0 ) {
+            var valueReward = this.getEmptyCount() / 15;
+
+            this.brain.backward( valueReward );
+        }
+    }
     // Major reward for winning.
-    if ( meta.won ) {
-        this.brain.backward(1);
-    } else if ( meta.over && ! meta.won ) {
-        this.brain.backward( roundToFourDecimal( -1 * (2048 - this.maxValue) / (2048 - 2) ) );
-    } else if ( this.maxValue > this.previousMax ) {
-        var valueReward = (this.maxValue - 2) / (2048 - 2);
-        this.brain.backward( roundToFourDecimal( valueReward ) );
-    } else if ( meta.score > meta.previous ) {
+    // if ( meta.won ) {
+    //     this.brain.backward(1);
+    // } else if ( meta.over && ! meta.won ) {
+    //     this.brain.backward( roundToFourDecimal( -1 * (2048 - this.maxValue) / (2048 - 2) ) );
+    // } else if ( this.maxValue > this.previousMax ) {
+    //     var valueReward = (this.maxValue - 2) / (2048 - 2);
+    //     this.brain.backward( roundToFourDecimal( valueReward ) );
+    // } else if ( meta.score > meta.previous ) {
         /*
          * The hope of adding this reward is that, as a last ditch effort,
          * the AI will _at least_ attempt to find moves that merge blocks.
          * While prioritizing moves that bump the max value, and win the game.
          */
         // this.brain.backward( 0.00045 ); // Reward for half the value of bumping the max value to 4.
-    }
+    // }
 
     this.brain.visSelf(document.getElementById('brainInfo'));
 }

@@ -8096,7 +8096,7 @@ var convnetjs = convnetjs || { REVISION: 'ALPHA' };
       var t0 = +new Date();
       if(this.dirty) { this.syncKernels_(); }
       var t1 = +new Date();
-      console.log('kernel sync took ' + (t1-t0) + 'ms');
+    //   console.log('kernel sync took ' + (t1-t0) + 'ms');
 
       var t0 = +new Date();
       var buf = VolToBuffer(V); // convert input V into a buffer object
@@ -8105,19 +8105,19 @@ var convnetjs = convnetjs || { REVISION: 'ALPHA' };
         buf = jpcnn.matrixInsertMargin(buf, this.pad, this.pad);
       }
       var t1 = +new Date();
-      console.log('data copy took ' + (t1-t0) + 'ms');
+    //   console.log('data copy took ' + (t1-t0) + 'ms');
 
       assert(this.sx === this.sy, "WebGL implementation doesn't support non-square kernels");
       var t0 = +new Date();
       var b0 = jpcnn.matrixCorrelate(buf, this.jpkernels, this.sx, this.out_depth, this.stride);
       var t1 = +new Date();
-      console.log('the actual convolution took ' + (t1-t0) + 'ms');
+    //   console.log('the actual convolution took ' + (t1-t0) + 'ms');
       jpcnn.matrixAddInplace(b0, this.jpbiases, 1.0);
       
       var t0 = +new Date();
       var A = BufferToVol(b0); // and convert back to Vol
       var t1 = +new Date();
-      console.log('BufferToVol took ' + (t1-t0) + 'ms');
+    //   console.log('BufferToVol took ' + (t1-t0) + 'ms');
 
       this.out_act = A;
       return this.out_act;

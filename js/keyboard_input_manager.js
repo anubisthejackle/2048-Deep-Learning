@@ -66,6 +66,16 @@ KeyboardInputManager.prototype.listen = function () {
     self.emit('load-brain')
   })
 
+  var learningButton = document.getElementById('learn-button');
+  learningButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    if ( learningButton.innerHTML === "Learning" ) {
+        learningButton.innerHTML = 'NOT Learning';
+    } else {
+        learningButton.innerHTML = 'Learning';
+    }
+    document.dispatchEvent( new CustomEvent( 'toggle-learning' ) );
+  });
 
   // Listen to swipe events
   var gestures = [Hammer.DIRECTION_UP, Hammer.DIRECTION_RIGHT,

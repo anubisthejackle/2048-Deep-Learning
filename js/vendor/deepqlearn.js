@@ -127,6 +127,9 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
   }
 
   Brain.prototype = {
+    toggle_learning() {
+        this.learning = !this.learning;
+    },
     save: function() {
         return this.value_net.toJSON();
     },
@@ -190,6 +193,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
         // we have enough to actually do something reasonable
         var net_input = this.getNetInput(input_array);
         if(this.learning) {
+            // console.log('LEARNING');
           // compute epsilon for the epsilon-greedy policy
         //   console.log(`Epsilon in forward ${this.epsilon}`);
         //   console.log(`Epsilon Min: ${this.epsilon_min}`);
@@ -209,6 +213,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
 
           this.epsilon = normalized_epsilon; 
         } else {
+            console.log('NOT LEARNING');
           this.epsilon = this.epsilon_test_time; // use test-time value
         }
         var rf = convnetjs.randf(0,1);
