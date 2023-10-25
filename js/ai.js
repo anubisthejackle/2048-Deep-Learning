@@ -182,7 +182,6 @@ AI.prototype.reward = function(meta) {
     // Major reward for winning.
     if ( meta.won ) {
         this.brain.backward(1);
-        return;
     } else if ( meta.over && ! meta.won ) {
         this.brain.backward( roundToFourDecimal( -1 * (2048 - this.maxValue) / (2048 - 2) ) );
     } else if ( this.maxValue > this.previousMax ) {
@@ -194,7 +193,7 @@ AI.prototype.reward = function(meta) {
          * the AI will _at least_ attempt to find moves that merge blocks.
          * While prioritizing moves that bump the max value, and win the game.
          */
-        this.brain.backward( 0.00045 ); // Reward for half the value of bumping the max value to 4.
+        // this.brain.backward( 0.00045 ); // Reward for half the value of bumping the max value to 4.
     }
 
     this.brain.visSelf(document.getElementById('brainInfo'));
