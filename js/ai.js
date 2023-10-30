@@ -195,6 +195,12 @@ AI.prototype.reward = function(meta) {
             this.brain.backward( valueReward );
         }
     }
+
+    // Slap them for trying an impossible move.
+    if ( this.previousGrid && JSON.stringify(this.previousGrid.cells) === JSON.stringify(this.grid.cells) ) {
+        this.brain.backward(-1);
+    }
+    
     // Major reward for winning.
     // if ( meta.won ) {
     //     this.brain.backward(1);
