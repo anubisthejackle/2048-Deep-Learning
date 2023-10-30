@@ -1,39 +1,88 @@
 function AI() {
-	
 	this.moves = [0,1,2,3];
-	this.badMoves = 0;
-	this.brain = new deepqlearn.Brain(20,4, {
-		epsilon_test_time: 0.05,
-		epsilon_min: 0.01,
-		experience_size: 30000,
-		temporal_window: 1000,
-		start_learn_threshold: 1,
-		learnings_steps_burnin: 30000,
-		gama: 0.5,
-		tdtrainer_options: {method: 'adadelta', learning_rate:0.1, momentum:0.09, batch_size:10}
-	});
-	this.previousMove = 0;	
+    this.brain = this.newBrain();
+
+    this.previousGrid = null;
+	this.previousMove = 0;
+    this.previousMax = 0;
 	this.previousMoved = false;
-	this.moved = false;
-	this.previousEmpty = 0;
-	this.previousMax = 0;
+    
+    this.grid = null;
+    this.maxValue = 0;
+
+    document.addEventListener( 'toggle-learning', function() {
+        this.brain.toggle_learning();
+    }.bind(this));
 }
 
-AI.prototype.toggleLearning = function() {
+AI.prototype.newBrain = function(opts) {
+    var inputs = 16+16+1;
+    var actions = 4;
+    var temporal_window = 10;
+    var network_size = inputs * temporal_window + actions * temporal_window + inputs;
 
-	this.badMoves = 0;
-	
-	if( this.brain.learning ) {
-		console.log( 'Learning turned off' );
-		this.brain.epsilon_test_time = 0.0; // don't make any random choices, ever
-		this.brain.learning = false;
-		return;
-	}
-	
-	console.log('Learning turned on');
-	this.brain.epsilon_test_time = 0.05; // don't make any random choices, ever
-	this.brain.learning = true;
-	
+    var options = {
+        epsilon_max: .75,
+        learning_steps_total: 10000,
+        learning_steps_burnin: 300,
+        temporal_window: temporal_window,
+        layer_defs: [
+            {
+                type: 'input',
+                out_depth: network_size,
+                out_sx: 1,
+                out_sy: 1
+            },
+            {
+                type: 'fc',
+                num_neurons: 50,
+                activation: 'relu'
+            },
+            {
+                type: 'conv',
+                sx: 5,
+                filters: 8,
+                stride: 1,
+                activation: 'relu'
+            },
+            {
+                type: 'fc',
+                num_neurons: 50,
+                activation: 'relu'
+            },
+            {
+                type: 'regression',
+                num_neurons: actions,
+            }
+        ],
+        ...opts // Allow overriding of default options.
+    };
+
+    return new deepqlearn.Brain(
+        inputs, 
+        actions, 
+        options
+    );
+}
+    
+AI.prototype.load = function(json) {
+    this.brain = this.newBrain({
+        epsilon_max: 0.5 // On brain load we don't want to randomize _every_ move.
+    });
+        
+    this.brain.load(json);
+    this.brain.visSelf(document.getElementById('brainInfo'));
+}
+
+AI.prototype.reset = function() {
+    // console.log('RESETING AI GAME STATE MEMORY');
+    this.previousGrid = null;
+	this.previousMove = 0;
+    this.previousMax = 0;
+	this.previousMoved = false;
+    
+    this.grid = null;
+    this.maxValue = 0;
 }
 
 AI.prototype.getMaxVal = function() {
@@ -98,7 +147,7 @@ AI.prototype.getEmptyCount = function() {
 
 }
 
-AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
+AI.prototype.buildInputs = function(score) {
 
 	if( !this.brain.learning && pMove.moved == false ) {
 		this.badMoves++;
@@ -113,34 +162,47 @@ AI.prototype.buildInputs = function(score, moved, timesMoved, pMove) {
 	
 	var inputs = [];
 
-	var max = this.getMaxVal();
+    this.previousMax = this.maxValue;
+	this.maxValue = this.getMaxVal();
+
+    if ( this.previousGrid === null ) {
+        for(i=0;i<16;i++){
+            inputs.push(0);
+        }
+    }else{
+        this.previousGrid.cells.forEach(function(row, index) {
+            row.forEach( function( curVal ) {
+                
+                if( curVal ){
+                    inputs.push( curVal.value );
+                }else{
+                    inputs.push(0);
+                }
+            });
+        });
+    }
 
 	this.grid.cells.forEach(function(row, index) {
 		row.forEach( function( curVal ) {
 			
 			if( curVal ){
-				inputs.push( curVal.value / max );
+				inputs.push( curVal.value );
 			}else{
 				inputs.push(0);
 			}
 		});
 	});
-	this.moved = moved;
-	
-	inputs.push( ( moved )                 ? 1                          : 0 );
-	inputs.push( ( this.previousMove > 0 ) ? this.previousMove / 4      : 0 );
-	inputs.push( timesMoved );
-	inputs.push( pMove.score );
 
-	/*inputs.push( ( score > 0 )             ? ( 1 + ( -1 / score ) )     : 0 );
-	inputs.push( ( moved )                 ? 1                          : 0 );
-	inputs.push( ( this.getEmptyCount() > 0 ) ? this.getEmptyCount()    : 0 );*/
+    inputs.push(score);
 
 	return inputs;
-
 }
 
 AI.prototype.getBest = function(grid, meta) {
+    if ( this.grid !== null ) {
+        this.previousGrid = jQuery.extend(true, {}, this.grid);
+    }
+
 	this.grid = grid;
 	var inputs = this.buildInputs( meta.score, meta.moved, meta.timesMoved, meta.pMove );
 	var action = this.brain.forward( inputs );
@@ -174,87 +236,63 @@ AI.prototype.doReward = function() {
 AI.prototype.reward = function(meta) {
 	var reward = 0;
 
-	console.log( meta );
-	
-	if( !this.over ) {
-		// If we are not done the game, we do not reward yet.
-		return;
-	}
-	
+    // 10-25-2023 -- When score changes, give a boost based on the number of empty spaces.
 
-	
-	/**
-	 * We provide a reward that is relative between 0 and 1 based on how closely
-	 * the largest tile is to 2048.
-	 */
-	this.brain.backward( ( this.getMaxVal() / 2048 ) );
-	this.brain.visSelf(document.getElementById('brainInfo'));
-	this.over = false;
-	return;
-	
-	/**
-	  IGNORE ALL BEYOND THIS POINT
-	  **/
-	if( this.over && !this.won ){
-		this.brain.backward( -1 );
-		console.log('Failure Reward:', -1);
-		return;
-	}
-	empty = this.getEmptyCount();
-	/*
-	if( this.previousEmpty > 0 && this.previousEmpty > empty ){
-		reward = ((16 - empty) * -1)/16; // Negative reward based on number of filled squares
-		console.log('Empty Reward (Neg):', (((16 - empty) * -1)/16));
-	}else if( this.previousEmpty > 0 && this.previousEmpty <= empty ){
-		reward = empty / 16; // Positive reward based on number of empty squares
-		console.log('Empty Reward (Pos):', (empty/16));
-	}
-        */
-	this.previousEmpty = empty;
-	
-	//reward += this.getMaxVal() / 2048;
-	
-	if( this.getMaxVal() <= this.previousMax ) {
-		this.previousMax = this.getMaxVal();
-		return;	
-	}
-	
-	reward += 1;
-	console.log('Max Value Change Reward: ', 1);
-	
-	this.previousMax = this.getMaxVal();
-	
-	if( this.moved == false ){
-	//	reward = reward * -1;
-		return;
-	}
+    if ( meta.score > meta.previous ) {
+        var empty = this.getEmptyCount();
 
-	//reward += (meta.score - meta.previous) / 2048;
-	
-	//console.log( 'Score Reward: ', ((meta.score - meta.previous) / 2048) );
-	
-	this.brain.backward( reward );
-	this.brain.visSelf(document.getElementById('brainInfo'));
-	
-	console.log( "Reward: ", reward );
+        // There are 16 squares, so at most this could ever be 16 empty spaces, minus 1 for the highest square.
+        if ( empty > 0 ) {
+            var valueReward = this.getEmptyCount() / 15;
 
+            this.brain.backward( valueReward );
+        }
+    }
+
+    // Slap them for trying an impossible move.
+    if ( this.previousGrid && JSON.stringify(this.previousGrid.cells) === JSON.stringify(this.grid.cells) ) {
+        this.brain.backward(-1);
+    }
+    
+    // Major reward for winning.
+    // if ( meta.won ) {
+    //     this.brain.backward(1);
+    // } else if ( meta.over && ! meta.won ) {
+    //     this.brain.backward( roundToFourDecimal( -1 * (2048 - this.maxValue) / (2048 - 2) ) );
+    // } else if ( this.maxValue > this.previousMax ) {
+    //     var valueReward = (this.maxValue - 2) / (2048 - 2);
+    //     this.brain.backward( roundToFourDecimal( valueReward ) );
+    // } else if ( meta.score > meta.previous ) {
+        /*
+         * The hope of adding this reward is that, as a last ditch effort,
+         * the AI will _at least_ attempt to find moves that merge blocks.
+         * While prioritizing moves that bump the max value, and win the game.
+         */
+        // this.brain.backward( 0.00045 ); // Reward for half the value of bumping the max value to 4.
+    // }
+
+    this.brain.visSelf(document.getElementById('brainInfo'));
+}
+
+function roundToFourDecimal( val ) {
+    return Math.round( ( val + Number.EPSILON ) * 1000 ) / 1000 
 }
 
 AI.prototype.rewardMultiple = function(meta){
 
-	var max = this.getMaxVal();
-	var scoreReward = ( 1 + (-1 / (meta.score - meta.previous ) ) );
-	var maxReward = ( 1 + ( ( -1 * max ) / meta.score ) );
-	var movesReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0);
-	var emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
+// 	var max = this.getMaxVal();
+// 	var scoreReward = ( 1 + (-1 / (meta.score - meta.previous ) ) );
+// 	var maxReward = ( 1 + ( ( -1 * max ) / meta.score ) );
+// 	var movesReward = ( ( meta.timesMoved > 0 ) ? ( 1 + (-1 / meta.timesMoved ) ) : 0);
+// 	var emptyReward = ( ( meta.empty > 0 ) ? ( 1 + (-1 / meta.empty ) ) : 0 );
 
-	this.brain.backward( scoreReward );
-	this.brain.backward( maxReward );
-	this.brain.backward( movesReward );
-	this.brain.backward( emptyReward );
-//	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
-		this.brain.visSelf(document.getElementById('brainInfo'));
-//	}
+// 	this.brain.backward( scoreReward );
+// 	this.brain.backward( maxReward );
+// 	this.brain.backward( movesReward );
+// 	this.brain.backward( emptyReward );
+// //	if( (Math.floor( Math.random() * (100 - 2) ) + 1) > 90 ){
+// 		this.brain.visSelf(document.getElementById('brainInfo'));
+// //	}
 
 }
 

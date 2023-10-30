@@ -60,16 +60,21 @@ KeyboardInputManager.prototype.listen = function () {
     self.emit('run')
   })
 
-  var saveButton = document.getElementById('save-button');
-  saveButton.addEventListener('click', function(e){ 
-    e.preventDefault();
-    self.emit('savenet');
-  });
-  
   var loadButton = document.getElementById('load-button');
-  loadButton.addEventListener('click', function(e){ 
+  loadButton.addEventListener('click', function(e) {
     e.preventDefault();
-    self.emit('loadnet');
+    self.emit('load-brain')
+  })
+
+  var learningButton = document.getElementById('learn-button');
+  learningButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    if ( learningButton.innerHTML === "Learning" ) {
+        learningButton.innerHTML = 'NOT Learning';
+    } else {
+        learningButton.innerHTML = 'Learning';
+    }
+    document.dispatchEvent( new CustomEvent( 'toggle-learning' ) );
   });
 
   // Listen to swipe events

@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>2048</title>
-	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-	<script src="http://cs.stanford.edu/people/karpathy/convnetjs/build/convnet-min.js"></script>
-	<script src="http://cs.stanford.edu/people/karpathy/convnetjs/build/convnet-webgl.js"></script>
-	<script src="http://cs.stanford.edu/people/karpathy/convnetjs/build/util.js"></script>
-	<script src="http://cs.stanford.edu/people/karpathy/convnetjs/build/deepqlearn.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="js/vendor/convnet-min.js"></script>
+	<script src="js/vendor/convnet-webgl.js"></script>
+	<script src="js/vendor/util.js"></script>
+	<script src="js/vendor/deepqlearn.js"></script>
 	<script src="js/JSONfn.js"></script>
   <link href="style/main.css" rel="stylesheet" type="text/css">
   <link href="style/ai.css" rel="stylesheet" type="text/css">
@@ -34,8 +34,8 @@
       <input type="checkbox" id="animation_on" checked="CHECKED" /> Animation
       <div id="run-button-container">
         <button id="run-button" class="ai-button">Auto-run</button>
-	<button id="save-button" class="ai-button">Save Network</button>
-	<button id="load-button" class="ai-button">Load Network</button>      
+        <button id="load-button" class="ai-button">Load Brain</button>
+        <button id="learn-button" class="ai-button">Learning</button>
       </div>
     </div>
 
@@ -90,7 +90,7 @@
 	</p>
 	<p id="scoreHistory">
 	</p>
-	<p id="network"><textarea id="savestate"></textarea></p>
+	<p id="network"><textarea style="width:100%;height:300px;" id="savestate"></textarea></p>
     <p class="game-explanation">
       <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When two tiles with the same number touch, they <strong>merge into one!</strong>
     </p>
